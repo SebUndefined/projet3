@@ -112,8 +112,4 @@ class Comment
 		$this->article = $article;
 		return $this;
 	}
-	
-	
-	
-	
 }

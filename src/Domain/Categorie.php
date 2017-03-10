@@ -61,10 +61,4 @@ class Categorie
 		$this->slug = $slug;
 		return $this;
 	}
-	
-	
-	
-	
-	
-	
 }

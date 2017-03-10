@@ -185,12 +185,4 @@ class Article
 		$this->img = $img;
 		return $this;
 	}
-	 
-	
-	
-	
-	
-	
-	
-	
 }

@@ -95,14 +95,5 @@ class Reporting
 	public function setComment(Comment $comment) {
 		$this->comment = $comment;
 		return $this;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}	
 }
