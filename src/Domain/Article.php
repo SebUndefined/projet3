@@ -147,7 +147,7 @@ class Article
 	 *
 	 * @param unknown_type $categorie        	
 	 */
-	public function setCategorie(Categorie $categorie) {
+	public function setCategorie(Category $categorie) {
 		$this->categorie = $categorie;
 		return $this;
 	}

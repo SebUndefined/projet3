@@ -3,7 +3,7 @@
 namespace BlogWriter\Domain;
 
 
-class Categorie
+class Category
 
 {
 	
