@@ -29,6 +29,9 @@ class ArticleDAO extends DAO
 	public function setCategoryDAO(CategoryDAO $categoryDAO) {
 		$this->categoryDAO = $categoryDAO;
 	}
+	public function setUserDAO(UserDAO $userDAO) {
+		$this->userDAO = $userDAO;
+	}
 	
 	protected function buildDomainObject(array $row)
 	{
@@ -39,7 +42,9 @@ class ArticleDAO extends DAO
 		$article->setTitle($row['art_title']);
 		$article->setContent($row['art_content']);
 		$article->setSlug($row['art_slug']);
-		
+		$authorID = $row['art_author_id'];
+		$author = $this->userDAO->find($authorID);
+		$article->setAuthor($author);
 		$categoryID = $row['art_category_id'];
 		$category = $this->categoryDAO->find($categoryID);
 		$article->setCategorie($category);
