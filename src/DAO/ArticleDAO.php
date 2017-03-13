@@ -25,6 +25,23 @@ class ArticleDAO extends DAO
 		}
 		return $articles;
 	}
+	/**
+	 * Returns an article matching the supplied id.
+	 *
+	 * @param integer $id
+	 *
+	 * @return \BlogWriter\Domain\Article|throws an exception if no matching article is found
+	 */
+	public function findBySlug($slug) {
+		$sql = "select * from Articles where art_slug=?";
+		$row = $this->getDb()->fetchAssoc($sql, array($slug));
+	
+		if ($row)
+			return $this->buildDomainObject($row);
+			else
+				throw new \Exception("No article with slug " . $slug);
+	}
+	
 	
 	public function setCategoryDAO(CategoryDAO $categoryDAO) {
 		$this->categoryDAO = $categoryDAO;

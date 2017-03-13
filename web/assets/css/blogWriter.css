@@ -46,24 +46,36 @@
         color: #53bbb3;
         background-color: white;
     }
-
+.carousel-caption.home-carousel
+{
+    background-color: rgba(83, 187, 179, 0.7);
+    right: 0;
+    text-align: right;
+    padding-right: 20px;
+}
 body 
 {
     font-family: 'Montserrat', sans-serif;
 }
 .fa-caret-down
 {
-    color: black;
     width: 100%;
     text-align: center;
     font-size: 50px;
     margin-top: -27px;
     padding-top: 0px
 }
-.header-aside
+.fa-caret-down-black
+{
+    color: black;
+}
+.fa-caret-down-green
+{
+    color: #53bbb3;
+}
+.sub-header
 {
     font-size: 30px;
-    background-color: black;
     text-align: center;
     color: #FFF;
     text-transform: uppercase;
@@ -72,6 +84,30 @@ body
     margin-top: 20px;
     padding: 8px;
     margin-bottom: 0;
+}
+.header-aside
+{
+    background-color: black;   
+}
+.header-blue 
+{
+    background-color: #53bbb3;
+}
+.title 
+{
+	color: #53bbb3;
+	background-color: #53bbb3;
+	height: 5px;
+	width: 97px;
+	margin: 10px 0px 20px 0px;
+	border: 0;
+	text-align:left;
+}
+.list-group-item-aside
+{
+	background-color: #53bbb3;
+	color: white;
+	text-align:center;
 }
 footer
 {

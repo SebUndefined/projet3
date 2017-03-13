@@ -16,10 +16,16 @@ class HomeController
 	 */
 	public function indexAction(Application $app) {
  		$articles = $app['dao.article']->findLast();
-		return $app['twig']->render('index.html.twig', array('articles' => $articles));
-// 		return $app['twig']->render('index.html.twig');
+ 		$categories = $app['dao.category']->findRandom();
+		return $app['twig']->render('index.html.twig', array('articles' => $articles, 'categories' => $categories));
 	}
-	
+	public function articleAction($slug, Request $request, Application $app) 
+	{
+		$article = $app['dao.article']->findBySlug($slug);
+		return $app['twig']->render('article.html.twig', array(
+				'article' => $article,
+				));
+	}
 	/**
 	 * Contact page controller.
 	 *

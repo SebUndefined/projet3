@@ -6,7 +6,19 @@ use BlogWriter\Domain\Category;
 
 class CategoryDAO extends DAO
 {
-	
+	public function findRandom()
+	{
+		$sql = "SELECT * FROM Categories ORDER BY RAND() LIMIT 6";
+		$result = $this->getDb()->fetchAll($sql);
+		
+		// Convert query result to an array of domain objects
+		$categories = array();
+		foreach ($result as $row) {
+			$categoryId = $row['cat_id'];
+			$categories[$categoryId] = $this->buildDomainObject($row);
+		}
+		return $categories;
+	}
 	public function find($idCategory)
 	{
 		$sql = "select * from Categories where cat_id=?";
