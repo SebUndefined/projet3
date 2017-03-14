@@ -9,10 +9,96 @@
         	<article class="col-xs-12">
         	<h1>{{ article.title }}</h1>
         	<hr class="title">
+        	
+        	<div class="img-article" style="background-image: url({{asset(article.img) }})">
+        	</div>
+        	
         	{{ article.content }}
+        	<p><small>
+        	Publié le {{ article.createDate|date("d/m/Y") }} à {{ article.createDate|date("H:i") }} par {{ article.author.firstName }} {{ article.author.lastName }}
+        	{% if article.createDate != article.updateDate %}
+    			(Mis à jour le {{ article.updateDate|date("d/m/Y") }} à {{ article.updateDate|date("H:i") }})
+            {% endif %}
+        	</small></p>
         	</article>
+        	<div class="col-xs-12">
+			<h3>Commentaires</h3>
+            {% for comment in comments %}
+                <div class="panel panel-default">
+                	<div class="panel-heading">
+                	<small>{{ comment.date|date("d/m/Y") }} à {{ comment.date|date("H:i") }}</small>
+                	</div>
+      				<div class="panel-body">
+        				<p>{{ comment.content }}</p>
+      				</div>
+      				<div class="panel-footer align-right">
+          				<button class="btn btn-danger">Signaler</button>
+          				<a class="btn btn-primary" role="button" data-toggle="collapse" href="#{{ comment.id }}" aria-expanded="true" aria-controls="collapseExample">
+          						Répondre
+        				</a>
+        				<div class="collapse" id="{{ comment.id }}">
+          				<div class="well">
+                                ...
+                        </div>
+                        </div>
+      					
+      				</div>
+    			</div>
+        	    {% if comment.children is defined %}
+        		    {% for commentLevel2 in comment.children %}
+        		    	<div class="panel panel-default comments-level2">
+        		    		<div class="panel-heading">
+                				<small>{{ commentLevel2.date|date("d/m/Y") }} à {{ commentLevel2.date|date("H:i") }}</small>
+                			</div>
+              				<div class="panel-body">
+                				<p>{{ commentLevel2.content }}</p>
+              				</div>
+  								<div class="panel-footer align-right">
+  									<button class="btn btn-danger">Signaler</button>
+  									<a class="btn btn-primary" role="button" data-toggle="collapse" href="#{{ commentLevel2.id }}" aria-expanded="true" aria-controls="collapseExample">
+  										Répondre
+									</a>
+									<div class="collapse" id="{{ commentLevel2.id }}">
+      									<div class="well">
+                            				...
+                        				</div>
+                    				</div>
+  					
+  								</div>
+						</div>
+        			    
+        			    {% if comment.children is defined %}
+        		            {% for commentLevel3 in commentLevel2.children %}
+                		    	<div class="panel panel-default comments-level3">
+                		    		<div class="panel-heading">
+                						<small>{{ commentLevel3.date|date("d/m/Y") }} à {{ commentLevel3.date|date("H:i") }}</small>
+                					</div>
+                      				<div class="panel-body">
+                        				<p>{{ commentLevel3.content }}</p>
+                      				</div>
+          								<div class="panel-footer align-right">
+          									<button class="btn btn-danger">Signaler</button>
+          									<a class="btn btn-primary" disabled="disabled" role="button" data-toggle="collapse" href="#{{ commentLevel3.id }}" aria-expanded="true" aria-controls="collapseExample">
+          										Répondre
+        									</a>
+        								<div class="collapse" id="{{ commentLevel3.id }}">
+          									<div class="well">
+                                ...
+                            				</div>
+                            			</div>
+          					
+          								</div>
+        						</div>
+        		            {% endfor %}
+        	            {% endif %}
+        		    {% endfor %}
+        	    {% endif %}
+            {% else %}
+        	Pas de commentaire pour le moment, soyez le premier à commenter cet article !!!
+            {% endfor %}
+        	
         </div>
-        
+        </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
                 <div class="col-xs-12">
     				<div class="sub-header header-aside">
@@ -22,7 +108,9 @@
     			</div>
     			<div class="col-xs-12">
     				<ul class="list-group">
-            			
+            			{% for category in categories %}
+            			<li class="list-group-item list-group-item-aside">{{ category.name }}</li>
+            			{% endfor %}
         			</ul>
     			</div>
 		</div> 

@@ -26,7 +26,7 @@ class ArticleDAO extends DAO
 		return $articles;
 	}
 	/**
-	 * Returns an article matching the supplied id.
+	 * Returns an article matching the supplied slug.
 	 *
 	 * @param integer $id
 	 *
@@ -40,6 +40,22 @@ class ArticleDAO extends DAO
 			return $this->buildDomainObject($row);
 			else
 				throw new \Exception("No article with slug " . $slug);
+	}
+	/**
+	 * Returns an article matching the supplied id.
+	 *
+	 * @param integer $id
+	 *
+	 * @return \BlogWriter\Domain\Article|throws an exception if no matching article is found
+	 */
+	public function findById($id) {
+		$sql = "select * from Articles where art_id=?";
+		$row = $this->getDb()->fetchAssoc($sql, array($id));
+	
+		if ($row)
+			return $this->buildDomainObject($row);
+			else
+				throw new \Exception("No article with slug " . $id);
 	}
 	
 	

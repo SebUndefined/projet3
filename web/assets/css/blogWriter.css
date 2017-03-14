@@ -103,11 +103,40 @@ body
 	border: 0;
 	text-align:left;
 }
+.img-article
+{
+	height:300px;
+	background-size:cover;
+	margin-bottom: 20px;
+}
 .list-group-item-aside
 {
 	background-color: #53bbb3;
 	color: white;
 	text-align:center;
+}
+.panel-default
+{
+	border-radius:0px
+}
+.panel-default >.panel-heading
+{
+	text-align: right;
+	background-color:#53bbb3;
+	color:#FFF;
+	border-radius:0px
+}
+.panel-default >.panel-body
+{
+	font-style: italic;
+}
+.comments-level3 
+{
+	margin-left:80px;
+}
+.comments-level2
+{
+	margin-left:40px;
 }
 footer
 {

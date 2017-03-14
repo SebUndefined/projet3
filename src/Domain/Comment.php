@@ -74,8 +74,8 @@ class Comment
 	 *
 	 * @param unknown_type $Parent        	
 	 */
-	public function setParent(Comment $Parent) {
-		$this->Parent = $parent;
+	public function setParent(Comment $parent) {
+		$this->parent = $parent;
 		return $this;
 	}
 	

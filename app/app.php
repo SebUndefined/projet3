@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use BlogWriter\DAO\CategoryDAO;
 use BlogWriter\DAO\ArticleDAO;
 use BlogWriter\DAO\UserDAO;
+use BlogWriter\DAO\CommentDAO;
 
 // Register global error and exception handlers
 ErrorHandler::register();
@@ -43,4 +44,9 @@ $app['dao.category'] = function ($app) {
 
 $app['dao.user'] = function ($app) {
 	return new UserDAO($app['db']);
+};
+$app['dao.comment'] = function ($app) {
+	$commentDAO = new CommentDAO($app['db']);
+	$commentDAO->setArticleDAO($app['dao.article']);
+	return $commentDAO;
 };

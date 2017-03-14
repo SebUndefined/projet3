@@ -22,8 +22,12 @@ class HomeController
 	public function articleAction($slug, Request $request, Application $app) 
 	{
 		$article = $app['dao.article']->findBySlug($slug);
+		$categories = $app['dao.category']->findRandom();
+		$comments = $app['dao.comment']->findAllByArticle($article->getId());
 		return $app['twig']->render('article.html.twig', array(
 				'article' => $article,
+				'categories' =>$categories,
+				'comments' => $comments,
 				));
 	}
 	/**
