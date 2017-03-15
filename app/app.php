@@ -8,6 +8,7 @@ use BlogWriter\DAO\CategoryDAO;
 use BlogWriter\DAO\ArticleDAO;
 use BlogWriter\DAO\UserDAO;
 use BlogWriter\DAO\CommentDAO;
+use BlogWriter\DAO\ReportingDAO;
 
 // Register global error and exception handlers
 ErrorHandler::register();
@@ -26,7 +27,11 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app->register(new Silex\Provider\AssetServiceProvider(), array(
 		'assets.version' => 'v1'
 ));
-
+$app->register(new Silex\Provider\SessionServiceProvider());
+//Load Form service provider and components
+$app->register(new Silex\Provider\FormServiceProvider());
+$app->register(new Silex\Provider\LocaleServiceProvider());
+$app->register(new Silex\Provider\TranslationServiceProvider());
 //##########################################################################
 //##################### Loading APP Services ###############################
 //##########################################################################
@@ -49,4 +54,7 @@ $app['dao.comment'] = function ($app) {
 	$commentDAO = new CommentDAO($app['db']);
 	$commentDAO->setArticleDAO($app['dao.article']);
 	return $commentDAO;
+};
+$app['dao.reporting'] = function ($app) {
+	return new ReportingDAO($app['db']);
 };

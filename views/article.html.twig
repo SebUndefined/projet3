@@ -9,7 +9,12 @@
         	<article class="col-xs-12">
         	<h1>{{ article.title }}</h1>
         	<hr class="title">
-        	
+        	{% for flashMessage in app.session.flashbag.get('successReport') %}
+            <div class="alert alert-info alert-dismissable">
+            	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {{ flashMessage }}
+            </div>
+            {% endfor %}
         	<div class="img-article" style="background-image: url({{asset(article.img) }})">
         	</div>
         	
@@ -32,7 +37,7 @@
         				<p>{{ comment.content }}</p>
       				</div>
       				<div class="panel-footer align-right">
-          				<button class="btn btn-danger">Signaler</button>
+          				<button class="btn btn-danger" data-toggle="modal" data-target="#reportModal" data-comment-id="{{ comment.id }}" data-comment-content="{{ comment.content }}">Signaler</button>
           				<a class="btn btn-primary" role="button" data-toggle="collapse" href="#{{ comment.id }}" aria-expanded="true" aria-controls="collapseExample">
           						Répondre
         				</a>
@@ -54,7 +59,7 @@
                 				<p>{{ commentLevel2.content }}</p>
               				</div>
   								<div class="panel-footer align-right">
-  									<button class="btn btn-danger">Signaler</button>
+  									<button class="btn btn-danger" data-toggle="modal" data-target="#reportModal" data-comment-id="{{ commentLevel2.id }}" data-comment-content="{{ commentLevel2.content }}">Signaler</button>
   									<a class="btn btn-primary" role="button" data-toggle="collapse" href="#{{ commentLevel2.id }}" aria-expanded="true" aria-controls="collapseExample">
   										Répondre
 									</a>
@@ -77,7 +82,7 @@
                         				<p>{{ commentLevel3.content }}</p>
                       				</div>
           								<div class="panel-footer align-right">
-          									<button class="btn btn-danger">Signaler</button>
+          									<button class="btn btn-danger" data-toggle="modal" data-target="#reportModal"  data-comment-id="{{ commentLevel3.id }}" data-comment-content="{{ commentLevel3.content }}">Signaler</button>
           									<a class="btn btn-primary" disabled="disabled" role="button" data-toggle="collapse" href="#{{ commentLevel3.id }}" aria-expanded="true" aria-controls="collapseExample">
           										Répondre
         									</a>
@@ -96,7 +101,52 @@
             {% else %}
         	Pas de commentaire pour le moment, soyez le premier à commenter cet article !!!
             {% endfor %}
-        	
+        	{# Start Modal#}
+        	<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">Signaler le commentaire</h4>
+                  </div>
+                  <div class="modal-body">
+                  	<p>L'internaute a dit :</p>
+                  	<p id="previewComment" class="control-label"></p>
+                        {% if reportingForm %}
+                        	{{ form_start(reportingForm) }}
+                        		<div class="form-group">
+                                    {{ form_widget(reportingForm.commentConcernedId, { 'attr':  {
+                                        'rows': '4',
+                                        'class': 'form-control',
+                                    }}) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form_widget(reportingForm.reason, { 'attr':  {
+                                        'rows': '4',
+                                        'class': 'form-control'
+                                    }}) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form_widget(reportingForm.comment, { 'attr':  {
+                                        'rows': '4',
+                                        'class': 'form-control',
+                                        'placeholder': 'Entrer votre remarque'
+                                    }}) }}
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-primary" value="Publish comment" />
+                                </div>
+                            {{ form_end(reportingForm) }}
+                        {% endif %}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
+                  </div>
+                </div>
+              </div>
+			</div>
+        	{# End Modal#}
         </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12">

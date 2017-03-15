@@ -10,7 +10,9 @@ class Reporting
 	private $reason;
 	private $comment;
 	private $date;
-	private $comment;
+	private $commentConcerned;
+	//test
+	private $commentConcernedId;
 	
 	/**
 	 *
@@ -84,16 +86,24 @@ class Reporting
 	 *
 	 * @return the unknown_type
 	 */
-	public function getComment() {
-		return $this->comment;
+	public function getCommentConcerned() {
+		return $this->commentConcerned;
 	}
 	
 	/**
 	 *
 	 * @param unknown_type $comment        	
 	 */
-	public function setComment(Comment $comment) {
-		$this->comment = $comment;
+	public function setCommentConcerned(Comment $comment) {
+		$this->commentConcerned = $comment;
 		return $this;
-	}	
+	}
+	public function getCommentConcernedId() {
+		return $this->commentConcernedId;
+	}
+	public function setCommentConcernedId($commentConcernedId) {
+		$this->commentConcernedId = $commentConcernedId;
+		return $this;
+	}
+		
 }

@@ -4,6 +4,8 @@ namespace BlogWriter\Controller;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use BlogWriter\Domain\Reporting;
+use BlogWriter\Form\Type\ReportingType;
 
 
 class HomeController 
@@ -24,10 +26,21 @@ class HomeController
 		$article = $app['dao.article']->findBySlug($slug);
 		$categories = $app['dao.category']->findRandom();
 		$comments = $app['dao.comment']->findAllByArticle($article->getId());
+		$report = new Reporting();
+// 		$report->setComment($commentTTT);
+		$reportingForm = $app['form.factory']->create(ReportingType::class, $report);
+		$reportingForm->handleRequest($request);
+		if ($reportingForm->isSubmitted() && $reportingForm->isValid()) {
+			$app['dao.reporting']->save($report);
+			$app['session']->getFlashBag()->add('successReport', 'Votre signalement a bien été pris en compte, merci pour votre coopération !');
+		}
+		$reportinFormView = $reportingForm->createView();
+		
 		return $app['twig']->render('article.html.twig', array(
 				'article' => $article,
 				'categories' =>$categories,
 				'comments' => $comments,
+				'reportingForm' =>$reportinFormView,
 				));
 	}
 	/**
