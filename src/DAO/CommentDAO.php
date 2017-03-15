@@ -51,7 +51,42 @@ class CommentDAO extends DAO
 			else
 				throw new \Exception("No comment matching id " . $id);
 	}
-	
+	/**
+	 * Saves a comment into the database.
+	 *
+	 * @param \BlogWriter\Domain\Comment $comment The comment to save
+	 */
+	public function save(Comment $comment) {
+		//die(var_dump($comment));
+		if ($comment->getParent()) {
+			$parentCommentId = $comment->getParent()->getId();
+			$level = $comment->getParent()->getLevel()+1;
+		}
+		else 
+		{
+			$parentCommentId = null;
+			$level = 1;
+		}
+		$commentData = array(
+				'com_date' => date('Y-m-d H:i:s'),
+				'com_content' => $comment->getContent(),
+				'com_id_parent' => $parentCommentId,
+				'com_level' => $level,
+				'com_id_art' => $comment->getArticle()->getId(),
+		);
+		//die(var_dump($commentData));
+		
+		if ($comment->getId()) {
+			// The comment has already been saved : update it
+			$this->getDb()->update('Comments', $commentData, array('com_id' => $comment->getId()));
+		} else {
+			// The comment has never been saved : insert it
+			$this->getDb()->insert('Comments', $commentData);
+			// Get the id of the newly created comment and set it on the entity.
+			$id = $this->getDb()->lastInsertId();
+			$comment->setId($id);
+		}
+	}
 	public function setArticleDAO(ArticleDAO $articleDAO) {
 		$this->articleDAO = $articleDAO;
 	}
@@ -79,8 +114,10 @@ class CommentDAO extends DAO
 			$parent = $this->findById($parentId);
 			$comment->setParent($parent);
 		}		
-		
 		$comment->setLevel($row['com_level']);
+		$articleID = $row['com_id_art'];
+		$article = $this->articleDAO->findById($articleID);
+		$comment->setArticle($article);
 		return $comment;
 		
 	}

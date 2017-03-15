@@ -138,6 +138,10 @@ body
 {
 	margin-left:40px;
 }
+.modal-header {
+	background-color:#53bbb3;
+	color:#FFF;
+}
 footer
 {
     margin-top: 40px;

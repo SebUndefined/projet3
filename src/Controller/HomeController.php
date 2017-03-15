@@ -6,6 +6,8 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use BlogWriter\Domain\Reporting;
 use BlogWriter\Form\Type\ReportingType;
+use BlogWriter\Domain\Comment;
+use BlogWriter\Form\Type\CommentType;
 
 
 class HomeController 
@@ -25,7 +27,16 @@ class HomeController
 	{
 		$article = $app['dao.article']->findBySlug($slug);
 		$categories = $app['dao.category']->findRandom();
-		$comments = $app['dao.comment']->findAllByArticle($article->getId());
+		$comment = new Comment();
+		$comment->setArticle($article);
+		$commentForm = $app['form.factory']->create(CommentType::class, $comment);
+		$commentForm->handleRequest($request);
+		if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+			$app['dao.comment']->save($comment);
+			$app['session']->getFlashBag()->add('success', 'Your comment was successfully added.');
+			
+		}
+		$commentFormView = $commentForm->createView();
 		$report = new Reporting();
 // 		$report->setComment($commentTTT);
 		$reportingForm = $app['form.factory']->create(ReportingType::class, $report);
@@ -35,12 +46,13 @@ class HomeController
 			$app['session']->getFlashBag()->add('successReport', 'Votre signalement a bien été pris en compte, merci pour votre coopération !');
 		}
 		$reportinFormView = $reportingForm->createView();
-		
+		$comments = $app['dao.comment']->findAllByArticle($article->getId());
 		return $app['twig']->render('article.html.twig', array(
 				'article' => $article,
 				'categories' =>$categories,
 				'comments' => $comments,
 				'reportingForm' =>$reportinFormView,
+				'commentForm' => $commentFormView,
 				));
 	}
 	/**
