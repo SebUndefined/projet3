@@ -58,7 +58,22 @@ class ArticleDAO extends DAO
 				throw new \Exception("No article with slug " . $id);
 	}
 	
-	
+	public function findPerPage($firstEntry, $messagesPerPages)
+	{
+		$sql = 'SELECT * FROM Articles ORDER BY art_id DESC LIMIT :firstEntry, :messagesPerPages';
+		$stmt = $this->getDb()->prepare($sql);
+		$stmt->bindValue("firstEntry", $firstEntry, "integer");
+		$stmt->bindValue("messagesPerPages", $messagesPerPages, "integer");
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		$articles = array();
+		foreach ($result as $row) {
+			$articleId = $row['art_id'];
+			$articles[$articleId] = $this->buildDomainObject($row);
+		}
+		return $articles;
+		
+	}
 	public function setCategoryDAO(CategoryDAO $categoryDAO) {
 		$this->categoryDAO = $categoryDAO;
 	}
@@ -66,6 +81,12 @@ class ArticleDAO extends DAO
 		$this->userDAO = $userDAO;
 	}
 	
+	public function countArticles()
+	{
+		$sql = 'SELECT COUNT(*) AS total FROM Articles';
+		$articleCounter = $this->getDb()->query($sql);
+		return $articleCounter->fetch();;
+	}
 	protected function buildDomainObject(array $row)
 	{
 		$article = new Article();

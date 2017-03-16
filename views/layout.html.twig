@@ -55,7 +55,7 @@
               <ul class="nav navbar-nav">
                 <li class="active"><a class="active-link" href="{{ path('home') }}">Home</a></li>
                 <li><a class="top-nav-link" href="{{ path('home') }}">A propos</a></li>
-                <li><a class="top-nav-link" href="#">Articles</a></li>
+                <li><a class="top-nav-link" href="{{ path('all-articles', {'page': '1'}) }}">Articles</a></li>
                 <li><a class="top-nav-link" href="#">Catégories</a></li>
                 <li><a class="top-nav-link" href="{{ path('contact') }}">Contact</a></li>
               </ul>

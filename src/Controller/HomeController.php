@@ -23,6 +23,53 @@ class HomeController
  		$categories = $app['dao.category']->findRandom();
 		return $app['twig']->render('index.html.twig', array('articles' => $articles, 'categories' => $categories));
 	}
+	/**
+	 * 
+	 * @param number $page
+	 * @param Application $app
+	 * @return unknown
+	 */
+	public function ArticleIndexAction($page = 1, Application $app)
+	{
+		$messagesPerPage = 3;
+		$numberOfArticles = $app['dao.article']->countArticles();
+		$NumberOfPage = ceil($numberOfArticles['total'] / $messagesPerPage);
+		
+		if (isset($page))
+		{
+			$currentPage = intval($page);
+			if ($currentPage>$NumberOfPage)
+			{
+				$currentPage = $NumberOfPage;
+			}
+		}
+		else 
+		{
+			$currentPage = 1;
+		}
+		$firstEntry = ($currentPage - 1) * $messagesPerPage;
+		$articlesOfPage = $app['dao.article']->findPerPage($firstEntry, $messagesPerPage);
+		$categories = $app['dao.category']->findRandom();
+		
+		return $app['twig']->render('articles.all.html.twig', array(
+				'articles' => $articlesOfPage, 
+				'categories' => $categories,
+				'numberOfPage' => $NumberOfPage,
+				'currentPage' => $currentPage,
+				'paramPage' => $page,
+		));
+		
+		
+	}
+	
+	
+	/**
+	 * 
+	 * @param string $slug
+	 * @param Request $request
+	 * @param Application $app
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|unknown
+	 */
 	public function articleAction($slug, Request $request, Application $app) 
 	{
 		$article = $app['dao.article']->findBySlug($slug);
@@ -33,8 +80,8 @@ class HomeController
 		$commentForm->handleRequest($request);
 		if ($commentForm->isSubmitted() && $commentForm->isValid()) {
 			$app['dao.comment']->save($comment);
-			$app['session']->getFlashBag()->add('success', 'Your comment was successfully added.');
-			
+			$app['session']->getFlashBag()->add('success', 'Votre commentaire a bien été posté, merci !!');
+			return $app->redirect($request->getRequestUri());
 		}
 		$commentFormView = $commentForm->createView();
 		$report = new Reporting();
@@ -44,6 +91,8 @@ class HomeController
 		if ($reportingForm->isSubmitted() && $reportingForm->isValid()) {
 			$app['dao.reporting']->save($report);
 			$app['session']->getFlashBag()->add('successReport', 'Votre signalement a bien été pris en compte, merci pour votre coopération !');
+			return $app->redirect($request->getRequestUri());
+			
 		}
 		$reportinFormView = $reportingForm->createView();
 		$comments = $app['dao.comment']->findAllByArticle($article->getId());
@@ -65,6 +114,9 @@ class HomeController
 		// 		return $app['twig']->render('index.html.twig', array('articles' => $articles));
 		return $app['twig']->render('contact.html.twig');
 	}
-	
+	public function redirect($url)
+	{
+		header('Location: http://www.example.com/');
+	}
 	
 }
