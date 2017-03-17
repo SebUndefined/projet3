@@ -12,17 +12,21 @@
            <i class="fa fa-caret-down fa-caret-down-green fa-5x"></i>
         </div>
     {% for article in articles %}
-    	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-    				<a href="../article/{{ article.slug }}">
-                    <div class="hovereffect" style="background-image: url({{asset(article.img) }})">
-                   
-                    <div class="overlay">
-                        <h2>{{ article.title }}</h2>
-                        <p class="info">{{ article.content|slice(0,100) }}...</p>
-                    </div>
-                    </div>
-                    </a>
-    	</div>
+    	<div class="col-xs-12">
+        	<div class="row">
+        		<div class="col-md-3">
+        			<img src="{{asset(article.img) }}" class="preview-pic">
+        		</div>
+        		<div class="col-md-9">
+                	<h2 class="preview-title">{{ article.title }}</h2>
+                	<p class="text-muted">Catégorie:  <a href="../category/{{ article.categorie.slug }}">{{ article.categorie.name }}</a></p>
+                	<p class="info">{{ article.content|slice(0,200) }}...</p>
+                	<a href="../article/{{ article.slug }}">Lire la suite...</a>
+        		</div>
+        	
+        	</div>
+        	<hr>
+    	</div>		
     {% endfor %}
     <div class="col-xs-12">
     	<nav class="pagination-center">

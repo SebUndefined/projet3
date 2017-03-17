@@ -31,7 +31,7 @@ class HomeController
 	 */
 	public function ArticleIndexAction($page = 1, Application $app)
 	{
-		$messagesPerPage = 3;
+		$messagesPerPage = 5;
 		$numberOfArticles = $app['dao.article']->countArticles();
 		$NumberOfPage = ceil($numberOfArticles['total'] / $messagesPerPage);
 		
