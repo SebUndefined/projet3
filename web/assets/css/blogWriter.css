@@ -220,7 +220,7 @@ footer
 }
 
 .hovereffect:hover .overlay {
-  background-color: rgba(83, 187, 179, 0.4);
+  background-color: rgba(83, 187, 179, 0.7);
 }
 
 .hovereffect img {

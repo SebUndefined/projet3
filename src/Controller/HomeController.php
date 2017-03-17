@@ -61,6 +61,18 @@ class HomeController
 		
 		
 	}
+	public function categoriesIndexAction(Application $app)
+	{
+		$categories = $app['dao.category']->findCategories();
+		return $app['twig']->render('categories.all.html.twig', array('categories' => $categories));
+	}
+	
+	public function categoryAction($slug, Application $app)
+	{
+		$articles = $app['dao.article']->findByCategory($slug);
+		
+		return $app['twig']->render('category.html.twig', array('articles' => $articles));
+	}
 	
 	
 	/**

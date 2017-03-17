@@ -10,6 +10,7 @@ class Category
 	private $id;
 	private $name; 
 	private $slug;
+	private $nbArticle;
 	
 	/**
 	 *
@@ -61,4 +62,22 @@ class Category
 		$this->slug = $slug;
 		return $this;
 	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getNbArticle() {
+		return $this->nbArticle;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $nbArticle        	
+	 */
+	public function setNbArticle($nbArticle) {
+		$this->nbArticle = $nbArticle;
+		return $this;
+	}
+	
 }

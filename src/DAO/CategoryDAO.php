@@ -29,7 +29,23 @@ class CategoryDAO extends DAO
 			else
 				throw new \Exception("Pas de catégorie portant le numéro " . $id);
 	}
+	//
 	
+	public function findCategories()
+	{
+		$sql = 'SELECT c.cat_id, c.cat_name, c.cat_slug, COUNT(*) as nb_article 
+				FROM Categories c 
+				INNER JOIN Articles a ON a.art_category_id = c.cat_id 
+				GROUP BY c.cat_id ';
+		$result = $this->getDb()->fetchAll($sql);
+		$categories = array();
+		foreach ($result as $row) {
+			$categoryId = $row['cat_id'];
+			$categories[$categoryId] = $this->buildDomainObject($row);
+		}
+		return $categories;
+		
+	}
 	
 	
 	protected function buildDomainObject(array $row)
@@ -38,6 +54,10 @@ class CategoryDAO extends DAO
 		$category->setId($row['cat_id']);
 		$category->setName($row['cat_name']);
 		$category->setSlug($row['cat_slug']);
+		if (array_key_exists('nb_article', $row)) {
+			$nbArticle = $row['nb_article'];
+			$category->setNbArticle($nbArticle);
+		}
 		return $category;
 	}
 }

@@ -6,6 +6,7 @@ $app->get('/', "BlogWriter\Controller\HomeController::indexAction")
 
 
 // Show all articles
+
 $app->get('/all-articles/{page}', "BlogWriter\Controller\HomeController::articleIndexAction")
 ->bind('all-articles');
 
@@ -13,5 +14,14 @@ $app->get('/all-articles/{page}', "BlogWriter\Controller\HomeController::article
 $app->match('/article/{slug}', "BlogWriter\Controller\HomeController::articleAction")
 ->bind('article');
 
+//All Categories
+$app->get('/all-categories', "BlogWriter\Controller\HomeController::categoriesIndexAction")
+->bind('all-categories');
+
+//Articles for one category
+$app->get('/category/{slug}', "BlogWriter\Controller\HomeController::categoryAction")
+->bind('category');
+
+//Contact page
 $app->get('/contact', "BlogWriter\Controller\HomeController::contactAction")
 ->bind('contact');

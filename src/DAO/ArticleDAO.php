@@ -42,6 +42,28 @@ class ArticleDAO extends DAO
 				throw new \Exception("No article with slug " . $slug);
 	}
 	/**
+	 * Returns all articles matching the supplied slug.
+	 *
+	 * @param string $slug
+	 *
+	 * @return \BlogWriter\Domain\Article|throws an exception if no matching article is found
+	 */
+	public function findByCategory($slug) {
+		$sql = "SELECT `Articles`.*, `Categories`.cat_id FROM `Articles` 
+				LEFT JOIN `Categories` ON `Articles`.`art_category_id` = `Categories`.`cat_id` 
+				WHERE Categories.cat_slug = ? ";
+		$result = $this->getDb()->fetchAll($sql, array($slug));
+		$articles = array();
+		//die(var_dump($result));
+		foreach ($result as $row) {
+			$articleId = $row['art_id'];
+			$articles[$articleId] = $this->buildDomainObject($row);
+		}
+		return $articles;
+	}
+	
+	
+	/**
 	 * Returns an article matching the supplied id.
 	 *
 	 * @param integer $id
