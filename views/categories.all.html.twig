@@ -27,13 +27,15 @@
     <div class="col-lg-4 col-md-4 col-sm-12">
                 <div class="col-xs-12">
     				<div class="sub-header header-aside">
-                           Catégories
+                           Articles
     				</div>
         			<i class="fa fa-caret-down fa-caret-down-black fa-5x"></i>
     			</div>
     			<div class="col-xs-12">
     				<ul class="list-group">
-            			
+    				{% for article in articles %}
+            			<a href="article/{{ article.slug }}" class="list-group-item list-group-item-aside">{{ article.title }}</a>
+            		{% endfor %}
         			</ul>
     			</div>
 	</div> 

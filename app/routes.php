@@ -25,3 +25,9 @@ $app->get('/category/{slug}', "BlogWriter\Controller\HomeController::categoryAct
 //Contact page
 $app->get('/contact', "BlogWriter\Controller\HomeController::contactAction")
 ->bind('contact');
+
+$app->get('/login', "BlogWriter\Controller\AdminController::loginIndex")
+->bind('login');
+
+$app->get('/manager', "BlogWriter\Controller\AdminController::adminIndex")
+->bind('manager');

@@ -6,7 +6,16 @@
     background-color: red;
 
 }
-
+.front-admin-bar
+{
+	background-color:#53bbb3;
+	color: #FFF;
+	text-align: right;
+}
+.front-admin-bar a
+{
+	color: #FFF;
+}
 #logo-container
 {
     text-align: center;

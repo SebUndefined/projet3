@@ -12,6 +12,27 @@ class CommentDAO extends DAO
 	private $articleDAO;
 	
 	/**
+	 * Return a list of all comments, sorted by date (most recent last).
+	 *
+	 * @return array A list of all comments.
+	 */
+	public function findAll()
+	{
+		$sql = "select * from Comments ORDER BY com_id DESC LIMIT 20";
+		$result = $this->getDb()->fetchAll($sql);
+		$comments = array();
+		foreach ($result as $row) {
+			$article = $this->articleDAO->findByID($row['com_id_art']);
+			$comId = $row['com_id'];
+			$comment = $this->buildDomainObject($row);
+			// The associated article is defined for the constructed comment
+			$comment->setArticle($article);
+			$comments[$comId] = $comment;
+		}
+		return $comments;
+	}
+	
+	/**
 	 * Return a list of all comments for an article, sorted by date (most recent last).
 	 *
 	 * @param integer $articleId The article id.
@@ -102,6 +123,15 @@ class CommentDAO extends DAO
 		}
 		return $comments;
 	}
+	
+	public function countComments()
+	{
+		$sql = 'SELECT COUNT(*) AS total FROM Comments';
+		$commentsCounter = $this->getDb()->query($sql);
+		$nbComments = $commentsCounter->fetch();
+		return $nbComments['total'];
+	}
+	
 	protected function buildDomainObject(array $row) {
 		$comment = new Comment();
 		$comment->setId($row['com_id']);

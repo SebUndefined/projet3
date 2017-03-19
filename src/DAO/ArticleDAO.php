@@ -107,7 +107,8 @@ class ArticleDAO extends DAO
 	{
 		$sql = 'SELECT COUNT(*) AS total FROM Articles';
 		$articleCounter = $this->getDb()->query($sql);
-		return $articleCounter->fetch();;
+		$nbArticles = $articleCounter->fetch();
+		return $nbArticles['total'];
 	}
 	protected function buildDomainObject(array $row)
 	{

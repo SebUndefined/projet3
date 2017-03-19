@@ -6,6 +6,10 @@ use BlogWriter\Domain\Category;
 
 class CategoryDAO extends DAO
 {
+	/**
+	 * Choose 6 categories randomly in the database
+	 * @return \BlogWriter\Domain\Category[]
+	 */
 	public function findRandom()
 	{
 		$sql = "SELECT * FROM Categories ORDER BY RAND() LIMIT 6";
@@ -19,6 +23,12 @@ class CategoryDAO extends DAO
 		}
 		return $categories;
 	}
+	/**
+	 * Return a specific category - Depending of the ID given 
+	 * @param integer $idCategory
+	 * @throws \Exception
+	 * @return \BlogWriter\Domain\Category
+	 */
 	public function find($idCategory)
 	{
 		$sql = "select * from Categories where cat_id=?";
@@ -29,8 +39,12 @@ class CategoryDAO extends DAO
 			else
 				throw new \Exception("Pas de catégorie portant le numéro " . $id);
 	}
-	//
 	
+	
+	/**
+	 * Find all category with the number of article for each of them
+	 * @return \BlogWriter\Domain\Category[]
+	 */
 	public function findCategories()
 	{
 		$sql = 'SELECT c.cat_id, c.cat_name, c.cat_slug, COUNT(*) as nb_article 
@@ -46,7 +60,13 @@ class CategoryDAO extends DAO
 		return $categories;
 		
 	}
-	
+	public function countCategories()
+	{
+		$sql = 'SELECT COUNT(*) AS total FROM Categories';
+		$categoryCounter = $this->getDb()->query($sql);
+		$nbcategories = $categoryCounter->fetch();
+		return $nbcategories['total'];
+	}
 	
 	protected function buildDomainObject(array $row)
 	{

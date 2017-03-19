@@ -1,0 +1,28 @@
+body { padding-bottom: 70px; }
+
+.panel-green, .panel-red, .panel-orange
+{
+	color: #FFF;
+}
+.panel-green
+{
+	background-color: #12D261;
+}
+.panel-red 
+{
+	background-color: #de0e0e;
+	
+}
+.panel-orange 
+{
+	background-color: orange;
+	
+}
+
+.panel-admin
+{
+	overflow: scroll;
+	height: 350px;
+}
+
+

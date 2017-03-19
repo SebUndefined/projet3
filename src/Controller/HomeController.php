@@ -33,7 +33,7 @@ class HomeController
 	{
 		$messagesPerPage = 5;
 		$numberOfArticles = $app['dao.article']->countArticles();
-		$NumberOfPage = ceil($numberOfArticles['total'] / $messagesPerPage);
+		$NumberOfPage = ceil($numberOfArticles / $messagesPerPage);
 		
 		if (isset($page))
 		{
@@ -64,14 +64,22 @@ class HomeController
 	public function categoriesIndexAction(Application $app)
 	{
 		$categories = $app['dao.category']->findCategories();
-		return $app['twig']->render('categories.all.html.twig', array('categories' => $categories));
+		$articles = $app['dao.article']->findLast();
+		return $app['twig']->render('categories.all.html.twig', array(
+				'categories' => $categories,
+				'articles' =>$articles,
+		));
 	}
 	
 	public function categoryAction($slug, Application $app)
 	{
 		$articles = $app['dao.article']->findByCategory($slug);
+		$categories = $app['dao.category']->findRandom();
 		
-		return $app['twig']->render('category.html.twig', array('articles' => $articles));
+		return $app['twig']->render('category.html.twig', array(
+				'articles' => $articles,
+				'categories' => $categories
+		));
 	}
 	
 	
@@ -126,9 +134,6 @@ class HomeController
 		// 		return $app['twig']->render('index.html.twig', array('articles' => $articles));
 		return $app['twig']->render('contact.html.twig');
 	}
-	public function redirect($url)
-	{
-		header('Location: http://www.example.com/');
-	}
+	
 	
 }

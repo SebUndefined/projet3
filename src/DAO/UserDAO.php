@@ -25,8 +25,23 @@ class UserDAO extends DAO implements UserProviderInterface
 			else
 				throw new \Exception("No user matching id " . $id);
 	}
+	
+	
 	/**
-	 * 
+	 * {@inheritDoc}
+	 */
+	public function loadUserByUsername($username)
+	{
+		$sql = "select * from Users where user_name=?";
+		$row = $this->getDb()->fetchAssoc($sql, array($username));
+	
+		if ($row)
+			return $this->buildDomainObject($row);
+			else
+				throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));
+	}
+	/**
+	 *
 	 * {@inheritDoc}
 	 * @see \BlogWriter\DAO\DAO::buildDomainObject()
 	 */
@@ -42,21 +57,6 @@ class UserDAO extends DAO implements UserProviderInterface
 		$user->setRole($row['user_role']);
 		return $user;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public function loadUserByUsername($username)
-	{
-		$sql = "select * from t_user where usr_name=?";
-		$row = $this->getDb()->fetchAssoc($sql, array($username));
-	
-		if ($row)
-			return $this->buildDomainObject($row);
-			else
-				throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -74,6 +74,6 @@ class UserDAO extends DAO implements UserProviderInterface
 	 */
 	public function supportsClass($class)
 	{
-		return 'MicroCMS\Domain\User' === $class;
+		return 'BlogWriter\Domain\User' === $class;
 	}
 }

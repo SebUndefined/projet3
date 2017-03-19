@@ -32,6 +32,13 @@ class ReportingDAO extends DAO
 		}
 	}
 	
+	public function countReportings()
+	{
+		$sql = 'SELECT COUNT(*) AS total FROM Reportings';
+		$reportingsCounter = $this->getDb()->query($sql);
+		$nbReportings = $reportingsCounter->fetch();
+		return $nbReportings['total'];
+	}
 	protected function buildDomainObject(array $row)
 	{
 		
