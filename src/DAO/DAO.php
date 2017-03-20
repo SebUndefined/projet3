@@ -33,8 +33,14 @@ abstract class DAO {
 	}
 	/**
 	 * Builds a domain object from a DB row.
-	 * Must be overridden by child classes.
+	 * Will be defined in each child class, please refer to them.
 	 */
 	protected abstract function buildDomainObject(array $row);
+	
+	protected function cleanString($string)
+	{
+		return strtolower(trim(preg_replace('~[^0-9a-z]+~i', '-', html_entity_decode(preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8')), '-'));
+		return $string;
+	}
 	
 }

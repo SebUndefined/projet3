@@ -31,3 +31,6 @@ $app->get('/login', "BlogWriter\Controller\AdminController::loginIndex")
 
 $app->get('/manager', "BlogWriter\Controller\AdminController::adminIndex")
 ->bind('manager');
+
+$app->match('/manager/category/add', "BlogWriter\Controller\AdminController::addCategoryAction")
+->bind('manager_category_add');

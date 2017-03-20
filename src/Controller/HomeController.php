@@ -20,7 +20,7 @@ class HomeController
 	 */
 	public function indexAction(Application $app) {
  		$articles = $app['dao.article']->findLast();
- 		$categories = $app['dao.category']->findRandom();
+ 		$categories = $app['dao.category']->findAll(6);
 		return $app['twig']->render('index.html.twig', array('articles' => $articles, 'categories' => $categories));
 	}
 	/**
@@ -49,7 +49,7 @@ class HomeController
 		}
 		$firstEntry = ($currentPage - 1) * $messagesPerPage;
 		$articlesOfPage = $app['dao.article']->findPerPage($firstEntry, $messagesPerPage);
-		$categories = $app['dao.category']->findRandom();
+		$categories = $app['dao.category']->findAll(6);
 		
 		return $app['twig']->render('articles.all.html.twig', array(
 				'articles' => $articlesOfPage, 
@@ -74,7 +74,7 @@ class HomeController
 	public function categoryAction($slug, Application $app)
 	{
 		$articles = $app['dao.article']->findByCategory($slug);
-		$categories = $app['dao.category']->findRandom();
+		$categories = $app['dao.category']->findAll(6);
 		
 		return $app['twig']->render('category.html.twig', array(
 				'articles' => $articles,
@@ -93,7 +93,7 @@ class HomeController
 	public function articleAction($slug, Request $request, Application $app) 
 	{
 		$article = $app['dao.article']->findBySlug($slug);
-		$categories = $app['dao.category']->findRandom();
+		$categories = $app['dao.category']->findAll(6);
 		$comment = new Comment();
 		$comment->setArticle($article);
 		$commentForm = $app['form.factory']->create(CommentType::class, $comment);

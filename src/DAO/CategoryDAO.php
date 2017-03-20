@@ -3,6 +3,7 @@
 namespace BlogWriter\DAO;
 
 use BlogWriter\Domain\Category;
+use Symfony\Component\Validator\Constraints\Length;
 
 class CategoryDAO extends DAO
 {
@@ -10,9 +11,13 @@ class CategoryDAO extends DAO
 	 * Choose 6 categories randomly in the database
 	 * @return \BlogWriter\Domain\Category[]
 	 */
-	public function findRandom()
+	public function findAll($limit = null)
 	{
-		$sql = "SELECT * FROM Categories ORDER BY RAND() LIMIT 6";
+		
+		$sql = "SELECT * FROM Categories";
+		if ($limit != null) {
+			$sql = $sql . " ORDER BY RAND() LIMIT " . $limit;
+		}
 		$result = $this->getDb()->fetchAll($sql);
 		
 		// Convert query result to an array of domain objects
@@ -59,6 +64,22 @@ class CategoryDAO extends DAO
 		}
 		return $categories;
 		
+	}
+	/**
+	 * Save a category in the Database, check before for the slug 
+	 * @param Category $category
+	 * 
+	 */
+	public function save(Category $category)
+	{
+		$futureSlug = $this->cleanString($category->getName());
+		
+		$categories = $this->findAll();
+		
+		$find = false;
+		$i = 0;
+		//To do a boucle
+		die(var_dump($categories));
 	}
 	public function countCategories()
 	{
