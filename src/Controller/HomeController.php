@@ -73,10 +73,12 @@ class HomeController
 	
 	public function categoryAction($slug, Application $app)
 	{
+		$category = $app['dao.category']->findBySlug($slug);
 		$articles = $app['dao.article']->findByCategory($slug);
 		$categories = $app['dao.category']->findAll(6);
 		
 		return $app['twig']->render('category.html.twig', array(
+				'category' => $category,
 				'articles' => $articles,
 				'categories' => $categories
 		));

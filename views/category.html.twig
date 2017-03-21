@@ -8,11 +8,11 @@
     <div class="col-lg-8 col-md-8 col-sm-12">
     	<div class="col-xs-12">
            <div class="sub-header header-blue">
-                Catégorie {{ articles|first.categorie.name }}
+                Catégorie {{ category.name }}
            </div>
            <i class="fa fa-caret-down fa-caret-down-green fa-5x"></i>
         </div>
-        
+    {% if articles %}    
     {% for article in articles %}
     <div class="col-xs-12">
     	<div class="row">
@@ -31,6 +31,9 @@
     </div>			
     	
     {% endfor %}
+    {% else %}
+    <h1 style="text-align: center;">:( <br>Pas d'article dans cette catégorie... </h1>
+    {% endif %}
     </div>
     <div class="col-lg-4 col-md-4 col-sm-12">
                 <div class="col-xs-12">

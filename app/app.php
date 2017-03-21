@@ -85,5 +85,7 @@ $app['dao.comment'] = function ($app) {
 	return $commentDAO;
 };
 $app['dao.reporting'] = function ($app) {
-	return new ReportingDAO($app['db']);
+	$reportingDAO = new ReportingDAO($app['db']);
+	$reportingDAO->setCommentDAO($app['dao.comment']);
+	return $reportingDAO;
 };

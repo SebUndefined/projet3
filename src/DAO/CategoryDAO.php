@@ -44,6 +44,23 @@ class CategoryDAO extends DAO
 			else
 				throw new \Exception("Pas de catégorie portant le numéro " . $id);
 	}
+	/**
+	 * Return a specific category - Depending of the ID given
+	 * @param integer $idCategory
+	 * @throws \Exception
+	 * @return \BlogWriter\Domain\Category
+	 */
+	public function findBySlug($slug)
+	{
+		$sql = "select * from Categories where cat_slug=?";
+		$row = $this->getDb()->fetchAssoc($sql, array($slug));
+	
+		if ($row)
+			return $this->buildDomainObject($row);
+			else
+				throw new \Exception("Pas de catégorie ayant le slug " . $slug);
+	}
+	
 	
 	
 	/**
@@ -52,10 +69,10 @@ class CategoryDAO extends DAO
 	 */
 	public function findCategories()
 	{
-		$sql = 'SELECT c.cat_id, c.cat_name, c.cat_slug, COUNT(*) as nb_article 
+		$sql = 'SELECT c.cat_id, c.cat_name, c.cat_slug, COUNT(a.art_category_id) as nb_article 
 				FROM Categories c 
-				INNER JOIN Articles a ON a.art_category_id = c.cat_id 
-				GROUP BY c.cat_id ';
+				LEFT JOIN Articles a ON a.art_category_id = c.cat_id 
+				GROUP BY c.cat_id';
 		$result = $this->getDb()->fetchAll($sql);
 		$categories = array();
 		foreach ($result as $row) {
@@ -73,13 +90,29 @@ class CategoryDAO extends DAO
 	public function save(Category $category)
 	{
 		$futureSlug = $this->cleanString($category->getName());
-		
 		$categories = $this->findAll();
-		
-		$find = false;
-		$i = 0;
-		//To do a boucle
-		die(var_dump($categories));
+		$validSlug = $this->validOrAdaptSlug($futureSlug, $categories);
+		$category->setSlug($validSlug);
+		$categoryData = array(
+				'cat_name' => $category->getName(),
+				'cat_slug' => $category->getSlug(),
+		);
+		if ($category->getId())
+		{
+			//if the category has an id, we update it
+			$this->getDb()->update('Categories', $categoryData, array('cat_id' => $category->getId()));
+		}
+		else 
+		{
+			$this->getDb()->insert('Categories', $categoryData);
+			$id = $this->getDb()->lastInsertId();
+			$category->setId($id);
+		}
+		return $category->getId();
+	}
+	public function delete($id)
+	{
+		$this->getDb()->delete('Categories', array('cat_id' => $id));
 	}
 	public function countCategories()
 	{

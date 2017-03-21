@@ -61,7 +61,21 @@ class ArticleDAO extends DAO
 		}
 		return $articles;
 	}
-	
+	/**
+	 * Return all the articles matching the supplied category id
+	 * @param integer $id
+	 * @return \BlogWriter\Domain\Article[]
+	 */
+	public function findByCategoryId($id) {
+		$sql = "SELECT * FROM Articles WHERE art_category_id = ?";
+		$result = $this->getDb()->fetchAll($sql, array($id));
+		$articles = array();
+		foreach ($result as $row) {
+			$articleId = $row['art_id'];
+			$articles[$articleId] = $this->buildDomainObject($row);
+		}
+		return $articles;
+	}
 	
 	/**
 	 * Returns an article matching the supplied id.
@@ -79,6 +93,17 @@ class ArticleDAO extends DAO
 			else
 				throw new \Exception("No article with slug " . $id);
 	}
+	
+	public function changeToDefaultCategory($catId)
+	{
+		$articles = $this->findByCategoryId($catId);
+		foreach ($articles as $article)
+		{
+			$this->getDb()->update('Articles', array('art_category_id' => 1), array('art_id' => $article->getId()));
+		}
+		
+	}
+	
 	
 	public function findPerPage($firstEntry, $messagesPerPages)
 	{

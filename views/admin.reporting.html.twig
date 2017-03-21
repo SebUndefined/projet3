@@ -1,0 +1,80 @@
+{% extends 'admin.layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h2 class="text-center">{{ block('title') }}</h2>
+{% for flashMessage in app.session.flashbag.get('success') %}
+<div class="alert alert-success">
+    {{ flashMessage }}
+</div>
+{% endfor %}
+
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>
+				Date
+			</th>
+			<th>
+				Raison
+			</th>
+			<th>
+				Commentaire
+			</th>
+			<th>
+				Détail du commentaire
+			</th>
+			<th>
+				Actions
+			</th>
+		</tr>
+		{% for reporting in reportings %}
+		<tr>
+			<td>
+				{{ reporting.date }}
+			</td>
+			<td>
+				{{ reporting.reason }}
+			</td>
+			<td>
+				{{ reporting.comment }}
+			</td>
+			<td>
+				{{ reporting.commentConcerned.content }}
+			</td>
+			<td>
+				<button class="btn btn-danger" data-toggle="modal" data-target="#commentDeleteConfirm{{ reporting.commentConcerned.id }}">
+					<i class="fa fa-times-circle-o" aria-hidden="true"></i>
+				</button>
+				<button class="btn btn-primary"data-toggle="modal" data-target="#reportingDeleteConfirm{{ reporting.id }}">
+					<i class="fa fa-trash" aria-hidden="true"></i>
+				</button>
+				<div class="modal fade" id="reportingDeleteConfirm{{ reporting.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">Confirmation requise</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Attention ! Tous les articles de cette catégorie seront placés dans la catégorie "Non Classé".</p>
+                                        <p>Voulez-vous vraiment supprimer cette catégorie ? </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                        <a href="{{ path('manager_category_delete', { 'id': reporting.id }) }}" class="btn btn-danger">Confirm</a>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                 </div><!-- /.modal -->
+			</td>
+		
+		</tr>
+		{% endfor %}
+	</thead>
+
+</table>
+
+
+
+{% endblock %}

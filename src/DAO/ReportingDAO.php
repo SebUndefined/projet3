@@ -2,10 +2,28 @@
 namespace BlogWriter\DAO;
 
 use BlogWriter\Domain\Reporting;
+use BlogWriter\Domain\Comment;
 
 class ReportingDAO extends DAO
 {
+	private $commentDAO;
 	
+	public function findAll($limit = null)
+	{
+		$sql = "SELECT * FROM Reportings ORDER BY report_date DESC";
+		if ($limit != null) {
+			$sql = $sql . " LIMIT " . $limit;
+		}
+		$result = $this->getDb()->fetchAll($sql);
+		
+		// Convert query result to an array of domain objects
+		$reportings = array();
+		foreach ($result as $row) {
+			$reportingId = $row['report_id'];
+			$reportings[$reportingId] = $this->buildDomainObject($row);
+		}
+		return $reportings;
+	}
 	/**
 	 * Saves a Report into the database.
 	 *
@@ -39,9 +57,20 @@ class ReportingDAO extends DAO
 		$nbReportings = $reportingsCounter->fetch();
 		return $nbReportings['total'];
 	}
+	public function setCommentDAO(CommentDAO $commentDAO)
+	{
+		$this->commentDAO = $commentDAO;
+	}
 	protected function buildDomainObject(array $row)
 	{
-		
+		$reporting = new Reporting();
+		$reporting->setId($row['report_id']);
+		$reporting->setReason($row['report_reason']);
+		$reporting->setComment($row['report_comment']);
+		$reporting->setDate($row['report_date']);
+		$commentConcerned = $this->commentDAO->findById($row['report_comment_id']);
+		$reporting->setCommentConcerned($commentConcerned);
+		return $reporting;
 	}
 	
 }

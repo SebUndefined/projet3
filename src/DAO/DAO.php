@@ -43,4 +43,32 @@ abstract class DAO {
 		return $string;
 	}
 	
+	protected function validOrAdaptSlug($futureSlug, $data)
+	{
+		$isValid = false;
+		$i = 1;
+		$tempSlug = $futureSlug;
+		while ($isValid == false)
+		{
+			foreach ($data as $row)
+			{
+				if ($tempSlug == $row->getSlug()) {
+					$tempSlug = $row->getSlug() . '-' . $i;
+					$isValid = false;
+					$i++;
+				}
+				else 
+				{
+					$isValid = true;
+				}
+			}
+		}
+		if ($isValid)
+		{
+			$futureSlug = $tempSlug;
+		}
+		return $futureSlug;
+		
+	}
+	
 }
