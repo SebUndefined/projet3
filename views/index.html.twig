@@ -34,7 +34,7 @@
         </div>
     {% for article in articles %}
     	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-    				<a href="article/{{ article.slug }}">
+    				<a href="{{ path ('article', { 'slug': article.slug })}}">
                     <div class="hovereffect" style="background-image: url({{ article.img }})">
                    
                     <div class="overlay">
@@ -56,7 +56,7 @@
     			<div class="col-xs-12">
     				<ul class="list-group">
             			{% for category in categories %}
-            			<a href="./category/{{ category.slug }}" class="list-group-item list-group-item-aside">{{ category.name }}</a>
+            			<a href="{{ path ('category', { 'slug': category.slug })}}" class="list-group-item list-group-item-aside">{{ category.name }}</a>
             			{% endfor %}
         			</ul>
     			</div>

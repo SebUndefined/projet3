@@ -99,6 +99,18 @@ class AdminController {
 		
 	}
 	//##########################################################################
+	//##################### Comments management ################################
+	//##########################################################################
+	
+	public function deleteCommentAction(Request $request, Application $app, $id) {
+		$app['dao.comment']->delete($id);
+		$app['session']->getFlashBag()->add('success', 'Le commentaire a bien été supprimé');
+		return $app->redirect($app['url_generator']->generate('manager_reporting'));
+	}
+	
+	
+	
+	//##########################################################################
 	//##################### Reportings management ##############################
 	//##########################################################################
 	public function adminReportingAction(Application $app)
@@ -109,4 +121,25 @@ class AdminController {
 				'reportings' => $reportings,
 		));
 	}
+	public function deleteReportingAction(Request $request, Application $app, $id, $commentId = null) {
+		
+		if ($commentId != null)
+		{
+			$this->deleteCommentAction($request, $app, $commentId);
+			
+		}
+		else 
+		{
+			$app['dao.reporting']->delete($id);
+			$app['session']->getFlashBag()->add('success', 'Le signalement a bien été supprimé');
+		}
+		return $app->redirect($app['url_generator']->generate('manager_reporting'));
+	}
+	
+	
+	
+	
+	
+	
+	
 }

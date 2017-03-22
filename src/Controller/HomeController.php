@@ -101,9 +101,17 @@ class HomeController
 		$commentForm = $app['form.factory']->create(CommentType::class, $comment);
 		$commentForm->handleRequest($request);
 		if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-			$app['dao.comment']->save($comment);
-			$app['session']->getFlashBag()->add('success', 'Votre commentaire a bien été posté, merci !!');
-			return $app->redirect($request->getRequestUri());
+			if (strlen($comment->getContent()) > 500 || strlen($comment->getContent()) < 0)
+			{
+				$app['session']->getFlashBag()->add('error', 'Votre commentaire est invalide.');
+			}
+			else 
+			{
+				$app['dao.comment']->save($comment);
+				$app['session']->getFlashBag()->add('success', 'Votre commentaire a bien été posté, merci !!');
+				return $app->redirect($request->getRequestUri());
+			}
+			
 		}
 		$commentFormView = $commentForm->createView();
 		$report = new Reporting();
@@ -118,6 +126,7 @@ class HomeController
 		}
 		$reportinFormView = $reportingForm->createView();
 		$comments = $app['dao.comment']->findAllByArticle($article->getId());
+// 		die(var_dump($comments));
 		return $app['twig']->render('article.html.twig', array(
 				'article' => $article,
 				'categories' =>$categories,

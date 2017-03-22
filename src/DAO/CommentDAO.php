@@ -108,6 +108,11 @@ class CommentDAO extends DAO
 			$comment->setId($id);
 		}
 	}
+	public function delete($id)
+	{
+		$this->getDb()->delete('Comments', array('com_id'=>$id));
+	}
+	
 	public function setArticleDAO(ArticleDAO $articleDAO) {
 		$this->articleDAO = $articleDAO;
 	}

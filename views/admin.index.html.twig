@@ -100,9 +100,9 @@
                 	</div>
             	</div>
         	</div>
-    	<a href="#">
+    	<a href="{{ path ('manager_reporting')}}">
         	<div class="panel-footer">
-            	<span class="pull-left">View Details</span>
+            	<span class="pull-left">Gérer</span>
             	<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
             	<div class="clearfix"></div>
         	</div>
@@ -114,18 +114,21 @@
 <div class="row">
 	<div class="col-lg-6">
 		<div class="panel panel-default">
-    			<div class="panel-header">
+    			<div id="reportingAdmin" class="panel-heading">
     				<h3><i class="fa fa-exclamation-triangle"></i> Signalements</h3>
+    				<small><a href="{{ path ('manager_reporting')}}">Voir tous...</a></small>
     			</div>
     			<div class="panel-body panel-admin">
     				<div class="table-responsive">
+    				{% if reportings %}
+        					{% for reporting in reportings %}
         				<table class="table">
         					<tr>
         						<th>Date</th>
         						<th>ID du commentaire</th>
         						<th>Raison</th>
         					</tr>
-        					{% for reporting in reportings %}
+        					
         					<tr>
         						<td>
                                     {{ reporting.date|date("d/m/Y") }} à {{ reporting.date|date("H:i") }}
@@ -137,16 +140,22 @@
         							{{ reporting.reason }}
         						</td>
         					</tr>
+        					
         					{% endfor %}
+        					
         				</table>
+        				{% else %}
+        					All clear ;)
+        			    {% endif %}
     				</div>
     			</div>
     		</div>
 	</div>
 	<div class="col-lg-6">
     		<div class="panel panel-default">
-    			<div class="panel-header">
+    			<div id="commentsAdmin" class="panel-heading">
     				<h3><i class="fa fa-comments"></i> Derniers commentaires</h3>
+    				<small>Voir tous...</small>
     			</div>
     			<div class="panel-body panel-admin">
     				<div class="table-responsive">

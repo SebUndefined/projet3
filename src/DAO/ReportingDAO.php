@@ -49,6 +49,11 @@ class ReportingDAO extends DAO
 			$report->setId($id);
 		}
 	}
+	public function delete($id)
+	{
+		
+		$this->getDb()->delete('Reportings', array('report_id'=>$id));
+	}
 	
 	public function countReportings()
 	{

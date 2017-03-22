@@ -18,11 +18,23 @@ body { padding-bottom: 70px; }
 	background-color: orange;
 	
 }
-
+.panel-heading a {
+	color:#FFF;
+}
 .panel-admin
 {
 	overflow: scroll;
 	height: 350px;
 }
 
-
+#reportingAdmin {
+	background-color: #de0e0e;
+	text-align: center;
+	color: #FFF;
+}
+#commentsAdmin
+{
+	background-color: orange;
+	text-align: center;
+	color: #FFF;
+}
