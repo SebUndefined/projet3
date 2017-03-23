@@ -37,9 +37,23 @@ abstract class DAO {
 	 */
 	protected abstract function buildDomainObject(array $row);
 	
+	/**
+	 * Return a usable slug
+	 * ###########################################################################
+	 * ######################## MORE INFO ON GITHUB ##############################
+	 * ###########https://github.com/SebUndefined/StringToSlugExplained###########
+	 * ###########################################################################
+	 * @param string $string
+	 * @return string
+	 */
 	protected function cleanString($string)
 	{
-		return strtolower(trim(preg_replace('~[^0-9a-z]+~i', '-', html_entity_decode(preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8')), '-'));
+		$string = htmlentities($string, ENT_QUOTES, 'UTF-8');
+		$string = preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|copy|th|tilde|uml);~i', '$1', $string);
+		$string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
+		$string = preg_replace('~[^0-9a-z]+~i', '-', $string);
+		$string = trim($string, '-');
+		$string = strtolower($string);
 		return $string;
 	}
 	

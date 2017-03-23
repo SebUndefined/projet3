@@ -8,8 +8,9 @@ use BlogWriter\Domain\Reporting;
 use BlogWriter\Form\Type\ReportingType;
 use BlogWriter\Domain\Comment;
 use BlogWriter\Form\Type\CommentType;
-
-
+//test
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 class HomeController 
 {
 	
@@ -115,7 +116,9 @@ class HomeController
 		}
 		$commentFormView = $commentForm->createView();
 		$report = new Reporting();
-// 		$report->setComment($commentTTT);
+		//test
+		//$testForm = $app['form.factory']->createBuilder(FormType::class)->add('comment', TextareaType::class)->getForm();
+		//endTest
 		$reportingForm = $app['form.factory']->create(ReportingType::class, $report);
 		$reportingForm->handleRequest($request);
 		if ($reportingForm->isSubmitted() && $reportingForm->isValid()) {
