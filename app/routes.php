@@ -46,7 +46,7 @@ $app->match('/manager/category/{id}/edit', "BlogWriter\Controller\AdminControlle
 $app->get('/manager/category/{id}/delete', "BlogWriter\Controller\AdminController::deleteCategoryAction")
 ->bind('manager_category_delete');
 
-//Manager Reportings
+//Manager Comments
 $app->get('/manager/comment/{id}/delete', "BlogWriter\Controller\AdminController::deleteCommentAction")
 ->bind('manager_comment_delete');
 
@@ -57,6 +57,16 @@ $app->get('/manager/reporting', "BlogWriter\Controller\AdminController::adminRep
 ->bind('manager_reporting');
 $app->get('/manager/reporting/{id}/delete', "BlogWriter\Controller\AdminController::deleteReportingAction")
 ->bind('manager_reporting_delete');
+
+//Manager Articles
+$app->match('/manager/article/add', "BlogWriter\Controller\AdminController::addArticleAction")
+->bind('manager_article_add');
+$app->match('/manager/article/{id}/edit', "BlogWriter\Controller\AdminController::editArticleAction")
+->bind('manager_article_edit');
+$app->get('/manager/article', "BlogWriter\Controller\AdminController::adminArticleAction")
+->bind('manager_article');
+$app->get('/manager/reporting/{id}/delete', "BlogWriter\Controller\AdminController::deleteArticleAction")
+->bind('manager_article_delete');
 
 
 

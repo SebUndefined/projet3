@@ -5,6 +5,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Silex\Application;
 use BlogWriter\Domain\Category;
 use BlogWriter\Form\Type\CategoryType;
+use BlogWriter\Domain\Article;
+use BlogWriter\Form\Type\ArticleType;
 
 class AdminController {
 
@@ -135,9 +137,54 @@ class AdminController {
 		}
 		return $app->redirect($app['url_generator']->generate('manager_reporting'));
 	}
+	//##########################################################################
+	//##################### Article management ##############################
+	//##########################################################################
 	
-	
-	
+	public function addArticleAction(Request $request, Application $app)
+	{
+		$categories = $app['dao.category']->findAll();
+		$users = $app['dao.user']->findAll();
+		$article = new Article();
+		$articleForm = $app['form.factory']->create(ArticleType::class, $article, array(
+				'categories' => $categories,
+				'users' => $users
+		));
+		$articleForm->handleRequest($request);
+		if ($articleForm->isSubmitted() && $articleForm->isValid())
+		{
+			die(var_dump($article));
+			
+			$id = $app['dao.article']->save($article);
+			$app['session']->getFlashBag()->add('success', 'L\'article a bien été ajouté !');
+			return $app->redirect($id . '/edit');
+		}
+		return $app['twig']->render('admin.article_form.html.twig', array(
+				'title' => 'Nouvel Article',
+				'articleForm' => $articleForm->createView(),
+		));
+	}
+	public function editArticleAction(Request $request, Application $app, $id)
+	{	
+		$article = $app['dao.article']->findById($id);
+		$categories = $app['dao.category']->findAll();
+		$users = $app['dao.user']->findAll();
+		$articleForm = $app['form.factory']->create(ArticleType::class, $article, array(
+				'categories' => $categories,
+				'users' => $users
+		));
+		$articleForm->handleRequest($request);
+		if ($articleForm->isSubmitted() && $articleForm->isValid())
+		{
+			die(var_dump($article));
+			$app['dao.article']->save($article);
+			$app['session']->getFlashBag()->add('success', 'La catégorie a bien été mise à jour !');
+		}
+		return $app['twig']->render('admin.article_form.html.twig', array(
+				'title' => 'Editer l\'article',
+				'articleForm' => $articleForm->createView(),
+		));
+	}
 	
 	
 	

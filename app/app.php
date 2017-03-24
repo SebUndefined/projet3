@@ -94,16 +94,16 @@ $app['dao.reporting'] = function ($app) {
 //##########################################################################
 //##################### Errors############## ###############################
 //##########################################################################
-$app->error(function (\Exception $e, Request $request, $code) use ($app) {
-	switch ($code) {
-		case 403:
-			$message = 'Pour accéder à cette page, il faut vous authentifier...';
-			break;
-		case 404:
-			$message = 'Vos avez demandé quelque chose qui ne se trouve pas ici...';
-			break;
-		default:
-			$message = "Oh non !!! Je ne peux pas trouver ce que vous demandez...";
-	}
-	return $app['twig']->render('fail.html.twig', array('message' => $message));
-});
+// $app->error(function (\Exception $e, Request $request, $code) use ($app) {
+// 	switch ($code) {
+// 		case 403:
+// 			$message = 'Pour accéder à cette page, il faut vous authentifier...';
+// 			break;
+// 		case 404:
+// 			$message = 'Vos avez demandé quelque chose qui ne se trouve pas ici...';
+// 			break;
+// 		default:
+// 			$message = "Oh non !!! Je ne peux pas trouver ce que vous demandez...";
+// 	}
+// 	return $app['twig']->render('fail.html.twig', array('message' => $message));
+// });

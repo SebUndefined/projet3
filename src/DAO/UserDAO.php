@@ -10,6 +10,22 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserDAO extends DAO implements UserProviderInterface
 {
+	
+	
+	public function findAll()
+	{
+		$sql = "select * from Users";
+		
+		$result = $this->getDb()->fetchAll($sql);
+		
+		// Convert query result to an array of domain objects
+		$users = array();
+		foreach ($result as $row) {
+			$userId = $row['user_id'];
+			$users[$userId] = $this->buildDomainObject($row);
+		}
+		return $users;
+	}
 	/**
 	 * 
 	 * @param integer $id
