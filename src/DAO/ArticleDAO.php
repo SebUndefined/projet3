@@ -25,6 +25,22 @@ class ArticleDAO extends DAO
 		}
 		return $articles;
 	}
+	public function findAll($limit = null)
+	{
+		$sql = "SELECT * FROM Articles ORDER BY art_create_date DESC";
+		if ($limit != null){
+			$sql = $sql . " LIMIT " . $limit;
+		}
+		$result = $this->getDb()->fetchAll($sql);
+	
+		// Convert query result to an array of domain objects
+		$articles = array();
+		foreach ($result as $row) {
+			$articleId = $row['art_id'];
+			$articles[$articleId] = $this->buildDomainObject($row);
+		}
+		return $articles;
+	}
 	/**
 	 * Returns an article matching the supplied slug.
 	 *
@@ -121,6 +137,45 @@ class ArticleDAO extends DAO
 		return $articles;
 		
 	}
+	public function save($article) 
+	{
+		$futureSlug = $this->cleanString($article->getTitle());
+		$articles = $this->findAll();
+		$validSlug = $this->validOrAdaptSlug($futureSlug, $articles);
+		$article->setSlug($validSlug);
+		$articleData = array(
+				'art_title' => $article->getTitle(),
+				'art_update_date' => date('Y-m-d H:i:s'),
+				'art_content' => $article->getContent(),
+				'art_slug' => $article->getSlug(),
+				'art_author_id' => $article->getAuthor()->getId(),
+				'art_category_id' => $article->getCategorie()->getId(),
+				'art_img' => $article->getImg(),
+				
+		);
+		if ($article->getPublished() == false) 
+		{
+			$articleData['art_published'] = 0;
+		}
+		else 
+		{
+			$articleData['art_published'] = 1;
+		}
+		if ($article->getId())
+		{
+			//if the category has an id, we update it but before
+			$this->getDb()->update('Articles', $articleData, array('art_id' => $articleData->getId()));
+		}
+		else
+		{
+			$articleData['art_create_date'] = date('Y-m-d H:i:s');
+			$this->getDb()->insert('Articles', $articleData);
+			$id = $this->getDb()->lastInsertId();
+			$article->setId($id);
+		}
+		return $article->getId();
+	}
+	
 	public function setCategoryDAO(CategoryDAO $categoryDAO) {
 		$this->categoryDAO = $categoryDAO;
 	}
@@ -150,7 +205,7 @@ class ArticleDAO extends DAO
 		$categoryID = $row['art_category_id'];
 		$category = $this->categoryDAO->find($categoryID);
 		$article->setCategorie($category);
-		//Missing some settings
+		$article->setPublished($row['art_published']);
 		if (!$row['art_img'])
 		{
 			$article->setImg('./assets/images/default.jpg');

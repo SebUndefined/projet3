@@ -8,6 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 
 
@@ -34,7 +36,6 @@ class ArticleType extends AbstractType
 				'choice_value' => 'id',
 				
 		));
- 		//die(var_dump($options));
 		$builder->add('categorie', ChoiceType::class, array(
 				'label' => 'Catégorie',
 				'attr' => array('class' =>'form-control col-lg-3'),
@@ -42,6 +43,11 @@ class ArticleType extends AbstractType
 				'choice_label' => 'name',
 				'choice_value' => 'id',
 				
+		));
+		$builder->add('img', FileType::class);
+		$builder->add('published', CheckboxType::class, array(
+				'label'    => 'Activer ?',
+				'required' => false,
 		));
 		
 	}

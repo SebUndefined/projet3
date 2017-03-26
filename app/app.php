@@ -9,6 +9,7 @@ use BlogWriter\DAO\ArticleDAO;
 use BlogWriter\DAO\UserDAO;
 use BlogWriter\DAO\CommentDAO;
 use BlogWriter\DAO\ReportingDAO;
+use BlogWriter\DAO\FileDAO;
 
 // Register global error and exception handlers
 ErrorHandler::register();
@@ -89,7 +90,10 @@ $app['dao.reporting'] = function ($app) {
 	$reportingDAO->setCommentDAO($app['dao.comment']);
 	return $reportingDAO;
 };
-
+$app['dao.file'] = function () {
+	$fileDAO = new FileDAO();
+	return $fileDAO;
+};
 
 //##########################################################################
 //##################### Errors############## ###############################

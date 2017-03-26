@@ -1,4 +1,5 @@
 <?php
+define("IMAGES", __DIR__ . "/assets/images/");
 //Looking for the Autoloader of Composer
 require_once __DIR__.'/../vendor/autoload.php';
 

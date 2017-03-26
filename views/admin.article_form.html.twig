@@ -8,6 +8,11 @@
     {{ flashMessage }}
 </div>
 {% endfor %}
+{% for flashMessage in app.session.flashbag.get('error') %}
+<div class="alert alert-success">
+    {{ flashMessage }}
+</div>
+{% endfor %}
 <div class="row">
 
      {{ form_start(articleForm) }}

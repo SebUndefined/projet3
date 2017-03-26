@@ -153,11 +153,33 @@ class AdminController {
 		$articleForm->handleRequest($request);
 		if ($articleForm->isSubmitted() && $articleForm->isValid())
 		{
-			die(var_dump($article));
-			
-			$id = $app['dao.article']->save($article);
-			$app['session']->getFlashBag()->add('success', 'L\'article a bien été ajouté !');
-			return $app->redirect($id . '/edit');
+			$img = $article->getImg();
+			$messageUser = $app['dao.file']->uploadable($img, array('jpeg', 'png'));
+			if ($messageUser !== true)
+			{
+				$app['session']->getFlashBag()->add($messageUser[0], $messageUser[1]);
+			}
+			else {
+				$newWidth = 750;
+				$maxHeight = 700;
+				$messageUser = $app['dao.file']->checkImageDimension($img, $newWidth, $maxHeight);
+				if (array_key_exists('newHeight', $messageUser))
+				{
+					$filename = $app['dao.file']->uploadFile($img,IMAGES, $newWidth, $messageUser['newHeight']);
+					if ($filename) {
+						$article->setImg('./assets/images/' . $filename);
+						$id = $app['dao.article']->save($article);
+						$app['session']->getFlashBag()->add('success', 'L\'article a bien été ajouté !');
+						//return $app->redirect($id . '/edit');
+						return $app->redirect($request->getRequestUri());
+					}
+					
+				}
+				else 
+				{
+					$app['session']->getFlashBag()->add($messageUser[0], $messageUser[1]);
+				}
+			}
 		}
 		return $app['twig']->render('admin.article_form.html.twig', array(
 				'title' => 'Nouvel Article',

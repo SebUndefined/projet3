@@ -17,7 +17,6 @@
             {% endfor %}
         	<div class="img-article" style="background-image: url({{asset(article.img) }})">
         	</div>
-        	
         	{{ article.content }}
         	<p><small>
         	Publié le {{ article.createDate|date("d/m/Y") }} à {{ article.createDate|date("H:i") }} par {{ article.author.firstName }} {{ article.author.lastName }}
