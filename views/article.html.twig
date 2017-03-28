@@ -17,7 +17,9 @@
             {% endfor %}
         	<div class="img-article" style="background-image: url({{asset(article.img) }})">
         	</div>
+        	{% autoescape false %}
         	{{ article.content }}
+        	{% endautoescape %}
         	<p><small>
         	Publié le {{ article.createDate|date("d/m/Y") }} à {{ article.createDate|date("H:i") }} par {{ article.author.firstName }} {{ article.author.lastName }}
         	{% if article.createDate != article.updateDate %}
@@ -65,7 +67,20 @@
         				</a>
         				<div class="collapse" id="{{ comment.id }}">
           				<div class="well">
-                         
+                         {{ form_start(commentForm) }}
+            			<div class="form-group">
+                        {{ form_errors(commentForm.content) }}
+                            {{ form_widget(commentForm.content, { 'attr':  {
+                    		'rows': '4',
+                            'class': 'form-control',
+                            'placeholder': 'Entrer votre commentaire',
+                            }}) }}
+                  
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Publish comment" />
+            </div>
+            {{ form_end(commentForm) }}
                          
                         </div>
                         </div>

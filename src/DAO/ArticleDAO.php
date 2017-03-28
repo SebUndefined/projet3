@@ -164,7 +164,7 @@ class ArticleDAO extends DAO
 		if ($article->getId())
 		{
 			//if the category has an id, we update it but before
-			$this->getDb()->update('Articles', $articleData, array('art_id' => $articleData->getId()));
+			$this->getDb()->update('Articles', $articleData, array('art_id' => $article->getId()));
 		}
 		else
 		{

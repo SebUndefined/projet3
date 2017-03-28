@@ -20,12 +20,16 @@ class ArticleType extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder->add('title', TextType::class, array(
-				'label' => 'Nom de l\'article',
+				'label' => 'Titre de l\'article',
 				'attr' => array('class' =>'form-control col-lg-3')
 		));
 		$builder->add('content', TextareaType::class, array(
+				'required' => false,
 				'label' => 'Contenu',
-				'attr' => array('class' =>'form-control col-lg-3')
+				'attr' => array(
+						'rows' => '20',
+				),
+				
 		));
 		//die(var_dump($options));
 		$builder->add('author', ChoiceType::class, array(
@@ -44,7 +48,10 @@ class ArticleType extends AbstractType
 				'choice_value' => 'id',
 				
 		));
-		$builder->add('img', FileType::class);
+		$builder->add('img', FileType::class, array(
+				'data_class' => null,
+				'required' => false,
+		));
 		$builder->add('published', CheckboxType::class, array(
 				'label'    => 'Activer ?',
 				'required' => false,
