@@ -93,6 +93,7 @@ class AdminController {
 		}
 		else 
 		{
+			//Before deleting the categorie, we move the articles in the default one
 			$app['dao.article']->changeToDefaultCategory($id);
 			$app['dao.category']->delete($id);
 			$app['session']->getFlashBag()->add('success', 'La catégorie a bien été supprimé, pensez à reclasser vos articles');
@@ -141,6 +142,20 @@ class AdminController {
 	//##################### Article management ##############################
 	//##########################################################################
 	
+	public function adminArticleAction(Application $app)
+	{
+		$articles = $app['dao.article']->findAll();
+		return $app['twig']->render('admin.article.html.twig', array(
+				'title' => 'Vos articles',
+				'articles' => $articles,
+		));
+	}
+	/**
+	 * Add the article to the database by using the save function from ArticleDAO
+	 * @param Request $request
+	 * @param Application $app
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|unknown
+	 */
 	public function addArticleAction(Request $request, Application $app)
 	{
 		$categories = $app['dao.category']->findAll();
@@ -152,39 +167,13 @@ class AdminController {
 		));
 		$articleForm->handleRequest($request);
 		if ($articleForm->isSubmitted() && $articleForm->isValid())
-		{
+		{	
+			//We set the img header
+			$article = $this->setImgHeader($article, $app);
 
-				
-			if ($article->getImg() !== null)
-			{
-				$img = $article->getImg();
-				$messageUser = $app['dao.file']->uploadable($img, array('jpeg', 'png'));
-				if ($messageUser !== true)
-				{
-					$app['session']->getFlashBag()->add($messageUser[0], $messageUser[1]);
-				}
-				else {
-					$newWidth = 750;
-					$maxHeight = 700;
-					$messageUser = $app['dao.file']->checkImageDimension($img, $newWidth, $maxHeight);
-					if (array_key_exists('newHeight', $messageUser))
-					{
-						$filename = $app['dao.file']->uploadFile($img,IMAGES, $newWidth, $messageUser['newHeight']);
-						if ($filename) {
-							$article->setImg('./assets/images/' . $filename);
-							
-						}
-							
-					}
-					else
-					{
-						$app['session']->getFlashBag()->add($messageUser[0], $messageUser[1]);
-					}
-				}
-			}
 			$id = $app['dao.article']->save($article);
 			$app['session']->getFlashBag()->add('success', 'L\'article a bien été ajouté !');
-			//return $app->redirect($id . '/edit');
+			return $app->redirect($id . '/edit');
 			return $app->redirect($request->getRequestUri());
 			
 		}
@@ -196,7 +185,7 @@ class AdminController {
 	public function editArticleAction(Request $request, Application $app, $id)
 	{	
 		$article = $app['dao.article']->findById($id);
-		//A faire dans la consturction de l'objet
+		//
 		if ($article->getPublished() == 1){
 			$article->setPublished(true);
 		}
@@ -207,6 +196,7 @@ class AdminController {
 			
 		$categories = $app['dao.category']->findAll();
 		$users = $app['dao.user']->findAll();
+		$articleImg = $article->getImg();
 		$articleForm = $app['form.factory']->create(ArticleType::class, $article, array(
 				'categories' => $categories,
 				'users' => $users
@@ -214,16 +204,83 @@ class AdminController {
 		$articleForm->handleRequest($request);
 		if ($articleForm->isSubmitted() && $articleForm->isValid())
 		{
-			
+			//If the picture is not the default one
+			if ($articleImg !== './assets/images/default.jpg')
+			{
+				//and if it has been changed by the user, we adapt it !
+				if ($article->getImg() !== null)
+				{
+					$article = $this->setImgHeader($article, $app);
+				}
+				//otherwise we put the same uploaded picture
+				else 
+				{
+					$article->setImg($articleImg);
+				}
+			}
+			//else if the pic is the default one and if it has been change by the user we upload the new pic
+			elseif ($article->getImg() !== null)
+			{
+				$article = $this->setImgHeader($article, $app);
+			}
+			//Otherwise, we leave the default picture
+			else 
+			{
+				$article->setImg($articleImg);
+			}
 			$app['dao.article']->save($article);
-			$app['session']->getFlashBag()->add('success', 'La catégorie a bien été mise à jour !');
+			$app['session']->getFlashBag()->add('success', 'L\'article a bien été mise à jour !');
 		}
 		return $app['twig']->render('admin.article_form.html.twig', array(
 				'title' => 'Editer l\'article',
 				'articleForm' => $articleForm->createView(),
 		));
 	}
-	
+	public function deleteArticleAction(Application $app, $id)
+	{
+		$app['dao.article']->delete($id);
+		$app['session']->getFlashBag()->add('success', 'l\'article est bien supprimé');
+		return $app->redirect($app['url_generator']->generate('manager_article'));
+	}
+	/**
+	 * Manage the article img header upload// Separated only for lisibility
+	 * @param Article $article
+	 * @param Application $app
+	 */
+	private function setImgHeader(Article $article, Application $app) {
+		$img = $article->getImg();
+		$messageUser = $app['dao.file']->uploadable($img, array('jpeg', 'png'));
+		//If the file is not uploadable, we set the pic to the default one and return a message in session var
+		if ($messageUser !== true)
+		{
+			$app['session']->getFlashBag()->add($messageUser[0], $messageUser[1]);
+			$article->setImg('./assets/images/default.jpg');
+		}
+		else {
+			$newWidth = 750;
+			$maxHeight = 700;
+			$messageUser = $app['dao.file']->checkImageDimension($img, $newWidth, $maxHeight);
+			//If the table has the newHeight row
+			//the picture fit to the dimension and we save it
+			if (array_key_exists('newHeight', $messageUser))
+			{
+				$filename = $app['dao.file']->uploadFile($img, IMAGES, $newWidth, $messageUser['newHeight']);
+				if ($filename) {
+					$article->setImg('./assets/images/' . $filename);
+					return $article;
+				}
+					
+			}
+			//Otherwise we set the pic to default
+			else
+			{
+				$app['session']->getFlashBag()->add($messageUser[0], $messageUser[1]);
+				$article->setImg('./assets/images/default.jpg');
+			}
+		}
+		return $article;
+		
+	}
 	
 	
 	

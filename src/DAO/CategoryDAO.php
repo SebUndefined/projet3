@@ -91,7 +91,14 @@ class CategoryDAO extends DAO
 	{
 		$futureSlug = $this->cleanString($category->getName());
 		$categories = $this->findAll();
-		$validSlug = $this->validOrAdaptSlug($futureSlug, $categories);
+		if ($category->getId() !== null) 
+		{
+			$validSlug = $this->validOrAdaptSlug($futureSlug, $categories, $category->getId());
+		}
+		else 
+		{
+			$validSlug = $this->validOrAdaptSlug($futureSlug, $categories);
+		}
 		$category->setSlug($validSlug);
 		$categoryData = array(
 				'cat_name' => $category->getName(),

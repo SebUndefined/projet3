@@ -65,7 +65,7 @@ $app->match('/manager/article/{id}/edit', "BlogWriter\Controller\AdminController
 ->bind('manager_article_edit');
 $app->get('/manager/article', "BlogWriter\Controller\AdminController::adminArticleAction")
 ->bind('manager_article');
-$app->get('/manager/reporting/{id}/delete', "BlogWriter\Controller\AdminController::deleteArticleAction")
+$app->get('/manager/article/{id}/delete', "BlogWriter\Controller\AdminController::deleteArticleAction")
 ->bind('manager_article_delete');
 
 

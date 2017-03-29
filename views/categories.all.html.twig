@@ -34,8 +34,10 @@
     			<div class="col-xs-12">
     				<ul class="list-group">
     				{% for article in articles %}
+    				{% if article.published == 1 %}
             			<a href="article/{{ article.slug }}" class="list-group-item list-group-item-aside">{{ article.title }}</a>
-            		{% endfor %}
+            		{% endif %}
+    				{% endfor %}
         			</ul>
     			</div>
 	</div> 

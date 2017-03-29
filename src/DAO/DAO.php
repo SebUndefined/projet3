@@ -56,25 +56,45 @@ abstract class DAO {
 		$string = strtolower($string);
 		return $string;
 	}
-	
-	protected function validOrAdaptSlug($futureSlug, $data)
+	/**
+	 * 
+	 * @param string $futureSlug
+	 * @param array $data
+	 * @param integer $objectId
+	 * @return string
+	 */
+	protected function validOrAdaptSlug($futureSlug, $data, $objectId = null)
 	{
+		//the slug is wrong at the beginning
 		$isValid = false;
+		//index
 		$i = 1;
+		//Temporary slug
 		$tempSlug = $futureSlug;
 		while ($isValid == false)
 		{
 			foreach ($data as $row)
 			{
-				if ($tempSlug == $row->getSlug()) {
-					$tempSlug = $row->getSlug() . '-' . $i;
-					$isValid = false;
-					$i++;
+				//if the objectID is different to the current object, we adapt it
+				if ($objectId !== $row->getId())
+				{
+					//if the temp slug is equal to the current slug, we adapt it by adding an index
+					if ($tempSlug == $row->getSlug())
+					{
+						$tempSlug = $row->getSlug() . '-' . $i;
+						$isValid = false;
+						$i++;
+					}
+					else
+					{
+						$isValid = true;
+					}
 				}
 				else 
 				{
 					$isValid = true;
 				}
+				
 			}
 		}
 		if ($isValid)

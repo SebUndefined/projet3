@@ -70,7 +70,6 @@ class ArticleDAO extends DAO
 				WHERE Categories.cat_slug = ? ";
 		$result = $this->getDb()->fetchAll($sql, array($slug));
 		$articles = array();
-		//die(var_dump($result));
 		foreach ($result as $row) {
 			$articleId = $row['art_id'];
 			$articles[$articleId] = $this->buildDomainObject($row);
@@ -78,7 +77,7 @@ class ArticleDAO extends DAO
 		return $articles;
 	}
 	/**
-	 * Return all the articles matching the supplied category id
+	 * Return all the articles matching the supplied category id, useful for replacing the article in the default one
 	 * @param integer $id
 	 * @return \BlogWriter\Domain\Article[]
 	 */
@@ -120,7 +119,12 @@ class ArticleDAO extends DAO
 		
 	}
 	
-	
+	/**
+	 * 
+	 * @param integer $firstEntry
+	 * @param integer $messagesPerPages
+	 * @return \BlogWriter\Domain\Article[]
+	 */
 	public function findPerPage($firstEntry, $messagesPerPages)
 	{
 		$sql = 'SELECT * FROM Articles ORDER BY art_id DESC LIMIT :firstEntry, :messagesPerPages';
@@ -141,7 +145,14 @@ class ArticleDAO extends DAO
 	{
 		$futureSlug = $this->cleanString($article->getTitle());
 		$articles = $this->findAll();
-		$validSlug = $this->validOrAdaptSlug($futureSlug, $articles);
+		if ($article->getId() !== null)
+		{
+			$validSlug = $this->validOrAdaptSlug($futureSlug, $articles, $article->getId());
+		}
+		else
+		{
+			$validSlug = $this->validOrAdaptSlug($futureSlug, $articles);
+		}
 		$article->setSlug($validSlug);
 		$articleData = array(
 				'art_title' => $article->getTitle(),
@@ -168,12 +179,17 @@ class ArticleDAO extends DAO
 		}
 		else
 		{
+			var_dump($articleData);
 			$articleData['art_create_date'] = date('Y-m-d H:i:s');
 			$this->getDb()->insert('Articles', $articleData);
 			$id = $this->getDb()->lastInsertId();
 			$article->setId($id);
 		}
 		return $article->getId();
+	}
+	public function delete($id)
+	{
+		$this->getDb()->delete('Articles', array('art_id' => $id));
 	}
 	
 	public function setCategoryDAO(CategoryDAO $categoryDAO) {

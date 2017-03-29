@@ -9,7 +9,7 @@
 </div>
 {% endfor %}
 {% for flashMessage in app.session.flashbag.get('error') %}
-<div class="alert alert-success">
+<div class="alert alert-danger">
     {{ flashMessage }}
 </div>
 {% endfor %}
@@ -46,6 +46,12 @@
                 'class': 'form-control'
             }}) }}
     	</div>
+    	{% if articleForm.vars.value.img == true %}
+    	<div>
+    	<p>Image actuelle :</p>
+    	<img src="{{ asset(articleForm.vars.value.img) }}" style="width:304px;">
+    	</div>
+    	{% endif %}
     	<div class="form-group">
         {{ form_label(articleForm.img, null) }}
             {{ form_errors(articleForm.img) }}

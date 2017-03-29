@@ -20,7 +20,7 @@ class HomeController
 	 * @param Application $app Silex application retourne les éléments pertinents pour la vue
 	 */
 	public function indexAction(Application $app) {
- 		$articles = $app['dao.article']->findLast();
+ 		$articles = $app['dao.article']->findAll(6);
  		$categories = $app['dao.category']->findAll(6);
 		return $app['twig']->render('index.html.twig', array('articles' => $articles, 'categories' => $categories));
 	}
@@ -65,7 +65,7 @@ class HomeController
 	public function categoriesIndexAction(Application $app)
 	{
 		$categories = $app['dao.category']->findCategories();
-		$articles = $app['dao.article']->findLast();
+		$articles = $app['dao.article']->findAll(6);
 		return $app['twig']->render('categories.all.html.twig', array(
 				'categories' => $categories,
 				'articles' =>$articles,
