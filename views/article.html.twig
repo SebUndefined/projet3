@@ -15,11 +15,13 @@
                 {{ flashMessage }}
             </div>
             {% endfor %}
-            {% if article.published == 0 and is_granted('IS_AUTHENTICATED_FULLY') %}
+            {% if article.published == 0 %}
             	<div class="alert alert-warning alert-dismissable">
             	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 Cet article n'est pas activé, il n'est visible que par les membres du staff
             	</div>
+            {% endif %}
+            {% if article.published == 0 and  is_granted('IS_AUTHENTICATED_FULLY') or article.published == 1 %}
             <div class="img-article" style="background-image: url({{asset(article.img) }})">
         	</div>
         	{% autoescape false %}
@@ -44,19 +46,19 @@
                 {{ flashMessage }}
             </div>
             {% endfor %}
-			{{ form_start(commentForm) }}
-            <div class="form-group">
-                {{ form_errors(commentForm.content) }}
-                {{ form_widget(commentForm.content, { 'attr':  {
-                    'rows': '4',
-                    'class': 'form-control',
-                    'placeholder': 'Entrer votre commentaire',
-                }}) }}
-            </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Publish comment" />
-            </div>
-            {{ form_end(commentForm) }}
+			<form name="CommentRoot" action="{{ path('comment_add', {'idParent' : 'null', 'idArticle': article.id}) }}" method="post">
+          					<div class="form-group">
+          						<textarea type="text" 
+          							class="form-control"
+          							name="RootComment" 
+          							rows="4"
+          							placeholder="Votre commentaire"
+          							required="required"></textarea>
+          					</div>
+          					<div class="form-group">
+          						<input type="submit" class="btn btn-primary" value="Publier">
+          					</div>
+    		</form>
             {% for comment in comments %}
                 <div class="panel panel-default">
                 	<div class="panel-heading">
@@ -70,26 +72,23 @@
           				<a class="btn btn-primary" role="button" data-toggle="collapse" href="#{{ comment.id }}" aria-expanded="true" aria-controls="collapseExample">
           						Répondre
         				</a>
-        				<div class="collapse" id="{{ comment.id }}">
+        				<div  class="collapse" id="{{ comment.id }}">
           				<div class="well">
-                         {{ form_start(commentForm) }}
-            			<div class="form-group">
-                        {{ form_errors(commentForm.content) }}
-                            {{ form_widget(commentForm.content, { 'attr':  {
-                    		'rows': '4',
-                            'class': 'form-control',
-                            'placeholder': 'Entrer votre commentaire',
-                            }}) }}
-                  
-            </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Publish comment" />
-            </div>
-            {{ form_end(commentForm) }}
-                         
+          				<form name="subComment{{ comment.id }}" action="{{ path('comment_add', {'idParent' : comment.id, 'idArticle': article.id}) }}" method="post">
+          					<div class="form-group">
+          						<textarea type="text" 
+          							class="form-control"
+          							name="answerComment{{ comment.id }}" 
+          							rows="4"
+          							placeholder="Votre réponse"
+          							required="required"></textarea>
+          					</div>
+          					<div class="form-group">
+          						<input type="submit" class="btn btn-primary" value="Publier">
+          					</div>
+    						</form>
+            			</div>                         
                         </div>
-                        </div>
-      					
       				</div>
     			</div>
         	    {% if comment.children is defined %}
@@ -187,10 +186,11 @@
               </div>
 			</div>
         	{# End Modal#}
-        </div>
-            {% endif %}
         	
         </div>
+   		{% endif %}	
+        </div>
+        
         <div class="col-lg-4 col-md-4 col-sm-12">
                 <div class="col-xs-12">
     				<div class="sub-header header-aside">

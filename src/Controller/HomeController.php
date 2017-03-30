@@ -20,7 +20,7 @@ class HomeController
 	 * @param Application $app Silex application retourne les éléments pertinents pour la vue
 	 */
 	public function indexAction(Application $app) {
- 		$articles = $app['dao.article']->findAll(6);
+ 		$articles = $app['dao.article']->findAll(6, true);
  		$categories = $app['dao.category']->findAll(6);
 		return $app['twig']->render('index.html.twig', array('articles' => $articles, 'categories' => $categories));
 	}
@@ -65,7 +65,7 @@ class HomeController
 	public function categoriesIndexAction(Application $app)
 	{
 		$categories = $app['dao.category']->findCategories();
-		$articles = $app['dao.article']->findAll(6);
+		$articles = $app['dao.article']->findAll(6, true);
 		return $app['twig']->render('categories.all.html.twig', array(
 				'categories' => $categories,
 				'articles' =>$articles,
@@ -97,28 +97,7 @@ class HomeController
 	{
 		$article = $app['dao.article']->findBySlug($slug);
 		$categories = $app['dao.category']->findAll(6);
-		$comment = new Comment();
-		$comment->setArticle($article);
-		$commentForm = $app['form.factory']->create(CommentType::class, $comment);
-		$commentForm->handleRequest($request);
-		if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-			if (strlen($comment->getContent()) > 500 || strlen($comment->getContent()) < 0)
-			{
-				$app['session']->getFlashBag()->add('error', 'Votre commentaire est invalide.');
-			}
-			else 
-			{
-				$app['dao.comment']->save($comment);
-				$app['session']->getFlashBag()->add('success', 'Votre commentaire a bien été posté, merci !!');
-				return $app->redirect($request->getRequestUri());
-			}
-			
-		}
-		$commentFormView = $commentForm->createView();
 		$report = new Reporting();
-		//test
-		//$testForm = $app['form.factory']->createBuilder(FormType::class)->add('comment', TextareaType::class)->getForm();
-		//endTest
 		$reportingForm = $app['form.factory']->create(ReportingType::class, $report);
 		$reportingForm->handleRequest($request);
 		if ($reportingForm->isSubmitted() && $reportingForm->isValid()) {
@@ -129,14 +108,33 @@ class HomeController
 		}
 		$reportinFormView = $reportingForm->createView();
 		$comments = $app['dao.comment']->findAllByArticle($article->getId());
-// 		die(var_dump($comments));
 		return $app['twig']->render('article.html.twig', array(
 				'article' => $article,
 				'categories' =>$categories,
 				'comments' => $comments,
 				'reportingForm' =>$reportinFormView,
-				'commentForm' => $commentFormView,
 				));
+	}
+	public function addCommentAction($idParent, $idArticle, Request $request, Application $app)
+	{
+		$comment = new Comment();
+		$article = $app['dao.article']->findById($idArticle);
+		$comment->setArticle($article);
+		if ($idParent !== 'null')
+		{
+			$commentParent = $app['dao.comment']->findById($idParent);
+			$comment->setLevel($commentParent->getLevel()+1);
+			$comment->setParent($commentParent);
+			$comment->setContent($request->get('answerComment'. $idParent));
+		}
+		else 
+		{
+			$comment->setContent($request->get('RootComment'));
+			$comment->setLevel(1);
+		}
+		$app['dao.comment']->save($comment);
+		$app['session']->getFlashBag()->add('successReport', 'Votre commentaire est posté, merci de votre participation ! ');
+		return $app->redirect($app['url_generator']->generate('article', array('slug' => $article->getSlug())));
 	}
 	/**
 	 * Contact page controller.
@@ -144,8 +142,6 @@ class HomeController
 	 * @param Application $app Silex application retourne les éléments pertinents pour la vue
 	 */
 	public function contactAction(Application $app) {
-		// 		$articles = $app['dao.article']->findAll();
-		// 		return $app['twig']->render('index.html.twig', array('articles' => $articles));
 		return $app['twig']->render('contact.html.twig');
 	}
 	

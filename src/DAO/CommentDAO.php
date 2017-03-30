@@ -78,8 +78,7 @@ class CommentDAO extends DAO
 	 * @param \BlogWriter\Domain\Comment $comment The comment to save
 	 */
 	public function save(Comment $comment) {
-		//die(var_dump($comment));
-		if ($comment->getParent()) {
+		if ($comment->getParent() !== null) {
 			$parentCommentId = $comment->getParent()->getId();
 			$level = $comment->getParent()->getLevel()+1;
 		}
@@ -95,7 +94,6 @@ class CommentDAO extends DAO
 				'com_level' => $level,
 				'com_id_art' => $comment->getArticle()->getId(),
 		);
-		//die(var_dump($commentData));
 		
 		if ($comment->getId()) {
 			// The comment has already been saved : update it

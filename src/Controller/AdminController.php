@@ -144,7 +144,7 @@ class AdminController {
 	
 	public function adminArticleAction(Application $app)
 	{
-		$articles = $app['dao.article']->findAll();
+		$articles = $app['dao.article']->findAll(null, false);
 		return $app['twig']->render('admin.article.html.twig', array(
 				'title' => 'Vos articles',
 				'articles' => $articles,

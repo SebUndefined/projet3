@@ -25,9 +25,14 @@ class ArticleDAO extends DAO
 		}
 		return $articles;
 	}
-	public function findAll($limit = null)
+	public function findAll($limit = null, $hideDisabled = true)
 	{
-		$sql = "SELECT * FROM Articles ORDER BY art_create_date DESC";
+		$sql = "SELECT * FROM Articles";
+		if ($hideDisabled === true)
+		{
+			$sql = $sql . " WHERE art_published = 1";
+		}
+		$sql = $sql . " ORDER BY art_create_date DESC";
 		if ($limit != null){
 			$sql = $sql . " LIMIT " . $limit;
 		}
@@ -67,7 +72,7 @@ class ArticleDAO extends DAO
 	public function findByCategory($slug) {
 		$sql = "SELECT `Articles`.*, `Categories`.cat_id FROM `Articles` 
 				LEFT JOIN `Categories` ON `Articles`.`art_category_id` = `Categories`.`cat_id` 
-				WHERE Categories.cat_slug = ? ";
+				WHERE Categories.cat_slug = ? and Articles.art_published = 1";
 		$result = $this->getDb()->fetchAll($sql, array($slug));
 		$articles = array();
 		foreach ($result as $row) {
@@ -127,7 +132,7 @@ class ArticleDAO extends DAO
 	 */
 	public function findPerPage($firstEntry, $messagesPerPages)
 	{
-		$sql = 'SELECT * FROM Articles ORDER BY art_id DESC LIMIT :firstEntry, :messagesPerPages';
+		$sql = 'SELECT * FROM Articles WHERE Articles.art_published = 1 ORDER BY art_id DESC LIMIT :firstEntry, :messagesPerPages';
 		$stmt = $this->getDb()->prepare($sql);
 		$stmt->bindValue("firstEntry", $firstEntry, "integer");
 		$stmt->bindValue("messagesPerPages", $messagesPerPages, "integer");
