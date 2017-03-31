@@ -85,7 +85,7 @@ class AdminController {
 				'categoryForm' => $categoryForm->createView(),
 		));
 	}
-	public function deleteCategoryAction(Request $request, Application $app, $id)
+	public function deleteCategoryAction(Application $app, $id)
 	{
 		//The user is not allowed to delete the default category
 		if ($id == 1) 
@@ -294,6 +294,15 @@ class AdminController {
 	//##########################################################################
 	//##################### User management ####################################
 	//##########################################################################
+	public function adminUserAction(Application $app)
+	{
+		$users = $app['dao.user']->findAll();
+		return $app['twig']->render('admin.user.html.twig', array(
+				'title' => 'Tous les articles',
+				'users' => $users,
+		));
+	}
+	
 	public function addUserAction(Application $app, Request $request)
 	{
 		$user = new User();

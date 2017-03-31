@@ -35,7 +35,7 @@
                 {% if i == currentPage %}
         			<li class="page-item active"><a class="page-link" href="./{{ i }}">{{ i }}</a></li>
         		{% else %}
-        			<li class="page-item"><a class="page-link" href="./{{ i }}">{{ i }}</a></li>
+        			<li class="page-item"><a class="page-link" href="{{ path('all-articles', {'page': i }) }}">{{ i }}</a></li>
         		{% endif %}
                 {% endfor %}
                 

@@ -1,0 +1,75 @@
+{% extends 'admin.layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h2 class="text-center">{{ block('title') }}</h2>
+{% for flashMessage in app.session.flashbag.get('success') %}
+<div class="alert alert-success">
+    {{ flashMessage }}
+</div>
+{% endfor %}
+
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>
+				Nom d'utilisateur
+			</th>
+			<th>
+				Email
+			</th>
+			<th>
+				Role
+			</th>
+			<th>
+				Actions
+			</th>
+		</tr>
+		{% for user in users %}
+		<tr>
+			<td>
+				{{ user.username }}
+			</td>
+			<td>
+				<a target="_blank" href="mailto:{{ user.email }}">{{ user.email }}</a>
+			</td>
+			<td>
+				{{ user.role }}
+			</td>
+			<td>
+				<a href="{{ path('manager_user_edit', { 'id': user.id }) }}">
+					<i class="fa fa-pencil" aria-hidden="true"></i>
+				</a>
+				<button class="btn btn-danger" data-toggle="modal" data-target="#userDeleteConfirm{{ user.id }}">
+					<i class="fa fa-times-circle-o" aria-hidden="true"></i>
+				</button>
+				<div class="modal fade" id="userDeleteConfirm{{ user.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">Confirmation requise</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Attention ! La suppression de cet utilisateur est irrévocable.</p>
+                                        <p>Voulez-vous vraiment supprimer cet utilisateur ? </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                        <a href="{{ path('manager_user_delete', { 'id': user.id }) }}" class="btn btn-danger">Confirmer</a>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                 </div><!-- /.modal -->
+			
+			</td>
+		
+		</tr>
+		{% endfor %}
+	</thead>
+
+</table>
+
+
+
+{% endblock %}

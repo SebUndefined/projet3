@@ -117,6 +117,7 @@ class HomeController
 	}
 	public function addCommentAction($idParent, $idArticle, Request $request, Application $app)
 	{
+		//Check long comment
 		$comment = new Comment();
 		$article = $app['dao.article']->findById($idArticle);
 		$comment->setArticle($article);

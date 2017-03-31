@@ -14,7 +14,7 @@
         <div class="list-group col-xs-12">
         	<div class="col-xs-12">
             {% for category in categories %}
-            		<a href="./category/{{ category.slug }}" class="list-group-item">
+            		<a href="{{ path('category', {'slug': category.slug}) }}" class="list-group-item">
             			<span class="badge">{{ category.nbArticle }}</span>
                         {{ category.name }}
                     </a>
@@ -35,7 +35,7 @@
     				<ul class="list-group">
     				{% for article in articles %}
     				{% if article.published == 1 %}
-            			<a href="article/{{ article.slug }}" class="list-group-item list-group-item-aside">{{ article.title }}</a>
+            			<a href="{{ path('article', {'slug': article.slug}) }}" class="list-group-item list-group-item-aside">{{ article.title }}</a>
             		{% endif %}
     				{% endfor %}
         			</ul>
