@@ -204,7 +204,7 @@
     			<div class="col-xs-12">
     				<ul class="list-group">
             			{% for category in categories %}
-            			<a href="../category/{{ category.slug }}" class="list-group-item list-group-item-aside">{{ category.name }}</a>
+            			<a href="{{ path('category', {'slug':category.slug}) }}" class="list-group-item list-group-item-aside">{{ category.name }}</a>
             			{% endfor %}
         			</ul>
     			</div>

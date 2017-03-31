@@ -184,7 +184,6 @@ class ArticleDAO extends DAO
 		}
 		else
 		{
-			var_dump($articleData);
 			$articleData['art_create_date'] = date('Y-m-d H:i:s');
 			$this->getDb()->insert('Articles', $articleData);
 			$id = $this->getDb()->lastInsertId();

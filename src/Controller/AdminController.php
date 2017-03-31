@@ -183,8 +183,7 @@ class AdminController {
 			
 			$id = $app['dao.article']->save($article);
 			$app['session']->getFlashBag()->add('success', 'L\'article a bien été ajouté !');
-			return $app->redirect($id . '/edit');
-			return $app->redirect($request->getRequestUri());
+			return $app->redirect($app['url_generator']->generate('manager_article_edit', array('id' => $id)));
 			
 		}
 		return $app['twig']->render('admin.article_form.html.twig', array(
