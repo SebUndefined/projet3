@@ -70,6 +70,11 @@ $app->get('/manager/article', "BlogWriter\Controller\AdminController::adminArtic
 $app->get('/manager/article/{id}/delete', "BlogWriter\Controller\AdminController::deleteArticleAction")
 ->bind('manager_article_delete');
 
+//Manager User
+$app->match('/manager/user/add', "BlogWriter\Controller\AdminController::addUserAction")
+->bind('manager_user_add');
+$app->match('/manager/user/{id}/edit', "BlogWriter\Controller\AdminController::editUserAction")
+->bind('manager_user_edit');
 
 
 

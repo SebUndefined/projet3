@@ -86,7 +86,7 @@
           					<div class="form-group">
           						<input type="submit" class="btn btn-primary" value="Publier">
           					</div>
-    						</form>
+    					</form>
             			</div>                         
                         </div>
       				</div>
@@ -107,7 +107,19 @@
 									</a>
 									<div class="collapse" id="{{ commentLevel2.id }}">
       									<div class="well">
-                            				...
+                            				<form name="subComment{{ commentLevel2.id }}" action="{{ path('comment_add', {'idParent' : commentLevel2.id, 'idArticle': article.id}) }}" method="post">
+                              					<div class="form-group">
+                              						<textarea type="text" 
+                              							class="form-control"
+                              							name="answerComment{{ commentLevel2.id }}" 
+                              							rows="4"
+                              							placeholder="Votre réponse"
+                              							required="required"></textarea>
+                              					</div>
+                              					<div class="form-group">
+                              						<input type="submit" class="btn btn-primary" value="Publier">
+                              					</div>
+                        					</form>
                         				</div>
                     				</div>
   					
@@ -124,16 +136,7 @@
                         				<p>{{ commentLevel3.content }}</p>
                       				</div>
           								<div class="panel-footer align-right">
-          									<button class="btn btn-danger" data-toggle="modal" data-target="#reportModal"  data-comment-id="{{ commentLevel3.id }}" data-comment-content="{{ commentLevel3.content }}">Signaler</button>
-          									<a class="btn btn-primary" disabled="disabled" role="button" data-toggle="collapse" href="#{{ commentLevel3.id }}" aria-expanded="true" aria-controls="collapseExample">
-          										Répondre
-        									</a>
-        								<div class="collapse" id="{{ commentLevel3.id }}">
-          									<div class="well">
-                                ...
-                            				</div>
-                            			</div>
-          					
+          									<button class="btn btn-danger" data-toggle="modal" data-target="#reportModal"  data-comment-id="{{ commentLevel3.id }}" data-comment-content="{{ commentLevel3.content }}">Signaler</button>          					
           								</div>
         						</div>
         		            {% endfor %}

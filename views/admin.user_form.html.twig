@@ -1,0 +1,82 @@
+{% extends 'admin.layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h2 class="text-center">{{ block('title') }}</h2>
+{% for flashMessage in app.session.flashbag.get('success') %}
+<div class="alert alert-success">
+    {{ flashMessage }}
+</div>
+{% endfor %}
+{% for flashMessage in app.session.flashbag.get('error') %}
+<div class="alert alert-danger">
+    {{ flashMessage }}
+</div>
+{% endfor %}
+<div class="row">
+	<div class="col-lg-12">
+    {{ form_start(userForm) }}
+        <div class="form-group">
+        {{ form_label(userForm.username, null)}}
+        
+            {{ form_errors(userForm.username) }}
+            {{ form_widget(userForm.username, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+        
+    	</div>
+    	<div class="form-group">
+        {{ form_label(userForm.password.first, null) }}
+            {{ form_errors(userForm.password.first) }}
+            {{ form_widget(userForm.password.first, { 'attr':  {
+                'class': 'form-control',
+            }})}}
+    	</div>
+    	<div class="form-group">
+        {{ form_label(userForm.password.second, null) }}
+            {{ form_errors(userForm.password.second) }}
+            {{ form_widget(userForm.password.second, { 'attr':  {
+                'class': 'form-control',
+            }})}}
+    	</div>
+    	<div class="form-group">
+        {{ form_label(userForm.firstName, null) }}
+            {{ form_errors(userForm.firstName) }}
+            {{ form_widget(userForm.firstName, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+    	</div>
+        <div class="form-group">
+        {{ form_label(userForm.lastName, null) }}
+            {{ form_errors(userForm.lastName) }}
+            {{ form_widget(userForm.lastName, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+    	</div>
+    	<div class="form-group">
+        {{ form_label(userForm.email, null) }}
+            {{ form_errors(userForm.email) }}
+            {{ form_widget(userForm.email, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+    	</div>
+    	<div class="form-group">
+        {{ form_label(userForm.role, null) }}
+            {{ form_errors(userForm.role) }}
+            {{ form_widget(userForm.role, { 'attr':  {
+                'class': 'form-control'
+            }}) }}
+    	</div>
+    <div class="form-group">
+        <div class="">
+            <input type="submit" class="btn btn-primary" value="Sauvegarder !" />
+        </div>
+    </div>
+    {{ form_end(userForm) }}
+    </div>
+
+</div>
+
+
+
+{% endblock %}

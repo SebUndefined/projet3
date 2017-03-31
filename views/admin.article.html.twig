@@ -44,6 +44,9 @@
 				{{ article.categorie.name }}
 			</td>
 			<td>
+				<a href="{{ path('manager_article_edit', { 'id': article.id }) }}">
+					<i class="fa fa-pencil" aria-hidden="true"></i>
+				</a>
 				<button class="btn btn-danger" data-toggle="modal" data-target="#articleDeleteConfirm{{ article.id }}">
 					<i class="fa fa-times-circle-o" aria-hidden="true"></i>
 				</button>

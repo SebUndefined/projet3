@@ -7,6 +7,8 @@ use BlogWriter\Domain\Category;
 use BlogWriter\Form\Type\CategoryType;
 use BlogWriter\Domain\Article;
 use BlogWriter\Form\Type\ArticleType;
+use BlogWriter\Domain\User;
+use BlogWriter\Form\Type\UserType;
 
 class AdminController {
 
@@ -169,8 +171,16 @@ class AdminController {
 		if ($articleForm->isSubmitted() && $articleForm->isValid())
 		{	
 			//We set the img header
-			$article = $this->setImgHeader($article, $app);
-
+			if ($article->getImg() == null)
+			{
+				$article->setImg(null);
+			}
+			else
+			{
+				$article = $this->setImgHeader($article, $app);
+			}
+			
+			
 			$id = $app['dao.article']->save($article);
 			$app['session']->getFlashBag()->add('success', 'L\'article a bien été ajouté !');
 			return $app->redirect($id . '/edit');
@@ -281,7 +291,85 @@ class AdminController {
 		return $article;
 		
 	}
+	//##########################################################################
+	//##################### User management ####################################
+	//##########################################################################
+	public function addUserAction(Application $app, Request $request)
+	{
+		$user = new User();
+		$userForm = $app['form.factory']->create(UserType::class, $user);
+		$userForm->handleRequest($request);
+		
+		if ($userForm->isSubmitted() && $userForm->isValid())
+		{
+			$isUserUnique = $app['dao.user']->isUserUnique($user);
+			$isEmailUnique = $app['dao.user']->isEmailUnique($user);
+			if ($isUserUnique)
+			{
+				if ($isEmailUnique)
+				{
+					$userSalt = substr(md5(time()),0, 23);
+					$user->setSalt($userSalt);
+					$clearPassword = $user->getPassword();
+					$encoder = $app['security.encoder.bcrypt'];
+					$encodedPassword = $encoder->encodePassword($clearPassword, $user->getSalt());
+					$user->setPassword($encodedPassword);
+					$id = $app['dao.user']->save($user);
+					$app['session']->getFlashBag()->add('success', 'L\'utilisateur à bien été ajouté');
+					return $app->redirect($id . '/edit');
+				}
+				else {
+					$app['session']->getFlashBag()->add('error', 'Email déjà utilisé...');
+				}
+			}
+			else 
+			{
+				$app['session']->getFlashBag()->add('error', 'Nom d\'utilisateur déjà utilisé');
+			}
+			
+		}
+		return $app['twig']->render('admin.user_form.html.twig', array(
+			'title'=> 'Nouvel Utilisateur',
+			'userForm' => $userForm->createView(),
+		));
+	}
+	public function editUserAction($id, Application $app, Request $request)
+	{
+		$user = $app['dao.user']->find($id);
+		$userForm = $app['form.factory']->create(UserType::class, $user);
+		$userForm->handleRequest($request);
 	
-	
+		if ($userForm->isSubmitted() && $userForm->isValid())
+		{
+			$isUserUnique = $app['dao.user']->isUserUnique($user);
+			$isEmailUnique = $app['dao.user']->isEmailUnique($user);
+			if ($isUserUnique)
+			{
+				if ($isEmailUnique)
+				{
+					$userSalt = substr(md5(time()),0, 23);
+					$user->setSalt($userSalt);
+					$clearPassword = $user->getPassword();
+					$encoder = $app['security.encoder.bcrypt'];
+					$encodedPassword = $encoder->encodePassword($clearPassword, $user->getSalt());
+					$user->setPassword($encodedPassword);
+					$app['dao.user']->save($user);
+					$app['session']->getFlashBag()->add('success', 'L\'utilisateur à bien été mis à jour!');
+				}
+				else {
+					$app['session']->getFlashBag()->add('error', 'Email déjà utilisé...');
+				}
+			}
+			else
+			{
+				$app['session']->getFlashBag()->add('error', 'Nom d\'utilisateur déjà utilisé');
+			}
+				
+		}
+		return $app['twig']->render('admin.user_form.html.twig', array(
+				'title'=> 'Editer l\'utilisateur',
+				'userForm' => $userForm->createView(),
+		));
+	}
 	
 }
