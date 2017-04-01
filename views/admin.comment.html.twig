@@ -21,41 +21,31 @@
 				Date
 			</th>
 			<th>
-				Titre
+				Commentaire
 			</th>
 			<th>
-				Auteur
-			</th>
-			<th>
-				Catégorie
+				Article
 			</th>
 			<th>
 				Actions
 			</th>
 		</tr>
-		{% for article in articles %}
+		{% for comment in comments %}
 		<tr>
 			<td>
-				{{ article.createDate }}<br>
-				{{ article.updateDate }}
+				{{ comment.date }}
 			</td>
 			<td>
-				<a target="_blank" href="{{ path('article', {'slug': article.slug}) }}">{{ article.title }}</a>
+				{{ comment.content }}
 			</td>
 			<td>
-				{{ article.author.username }}
+				{{ comment.article.title }}
 			</td>
 			<td>
-				{{ article.categorie.name }}
-			</td>
-			<td>
-				<a href="{{ path('manager_article_edit', { 'id': article.id }) }}">
-					<i class="fa fa-pencil" aria-hidden="true"></i>
-				</a>
-				<button class="btn btn-danger" data-toggle="modal" data-target="#articleDeleteConfirm{{ article.id }}">
+				<button class="btn btn-danger" data-toggle="modal" data-target="#commentDeleteConfirm{{ comment.id }}">
 					<i class="fa fa-times-circle-o" aria-hidden="true"></i>
 				</button>
-				<div class="modal fade" id="articleDeleteConfirm{{ article.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+				<div class="modal fade" id="commentDeleteConfirm{{ comment.id }}" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -63,12 +53,12 @@
                                         <h4 class="modal-title">Confirmation requise</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Attention ! La suppression de cet article est irrévocable. Vous pouvez simplement le désactiver si vous le souhaitez...</p>
-                                        <p>Voulez-vous vraiment supprimer cet article ? </p>
+                                        <p>Attention ! La suppression de cet utilisateur est irrévocable. Tous ses articles seront supprimés.</p>
+                                        
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                                        <a href="{{ path('manager_article_delete', { 'id': article.id }) }}" class="btn btn-danger">Confirmer</a>
+                                        <a href="{{ path('manager_comment_delete', { 'commentId': comment.id }) }}" class="btn btn-danger">Confirmer</a>
                                     </div>
                                 </div><!-- /.modal-content -->
                             </div><!-- /.modal-dialog -->

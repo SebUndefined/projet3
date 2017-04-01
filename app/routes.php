@@ -47,9 +47,11 @@ $app->get('/manager/category/{id}/delete/', "BlogWriter\Controller\AdminControll
 ->bind('manager_category_delete');
 
 //Manager Comments
+$app->get('/manager/comment/', "BlogWriter\Controller\AdminController::indexCommentAction")
+->bind('manager_comment');
 $app->match('/comment/{idParent}/{idArticle}/add/', "BlogWriter\Controller\HomeController::addCommentAction")
 ->bind('comment_add');
-$app->get('/manager/comment/{id}/delete/', "BlogWriter\Controller\AdminController::deleteCommentAction")
+$app->get('/manager/comment/{commentId}/delete/', "BlogWriter\Controller\AdminController::deleteCommentAction")
 ->bind('manager_comment_delete');
 
 

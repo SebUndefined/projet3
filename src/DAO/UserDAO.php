@@ -39,7 +39,7 @@ class UserDAO extends DAO implements UserProviderInterface
 		if ($row)
 			return $this->buildDomainObject($row);
 			else
-				throw new \Exception("No user matching id " . $id);
+				throw new \Exception("Pas d'\'utilisateur portant l\'id " . $id);
 	}
 	
 	public function save(User $user)
@@ -65,6 +65,11 @@ class UserDAO extends DAO implements UserProviderInterface
 			$user->setId($this->getDb()->lastInsertId());
 			return $user->getId();
 		}
+	}
+	public function delete($id)
+	{
+		$row = $this->getDb()->delete('Users', array('user_id' => $id));
+		return $row;
 	}
 	/**
 	 * Check if the username is not already use

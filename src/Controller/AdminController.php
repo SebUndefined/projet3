@@ -106,11 +106,29 @@ class AdminController {
 	//##########################################################################
 	//##################### Comments management ################################
 	//##########################################################################
+	public function indexCommentAction(Application $app)
+	{
+		$comments = $app['dao.comment']->findAll();
+		return $app['twig']->render('admin.comment.html.twig', array(
+			'title' => 'Vos commentaires',
+			'comments' => $comments,	
+		));
+	}
 	
-	public function deleteCommentAction(Request $request, Application $app, $id) {
-		$app['dao.comment']->delete($id);
+	
+	
+	public function deleteCommentAction(Request $request, Application $app, $commentId, $reportId = null) {
+		$app['dao.comment']->delete($commentId);
 		$app['session']->getFlashBag()->add('success', 'Le commentaire a bien été supprimé');
-		return $app->redirect($app['url_generator']->generate('manager_reporting'));
+		if ($reportId == null)
+		{
+			return $app->redirect($app['url_generator']->generate('manager_comment'));
+		}
+		else 
+		{
+			return $app->redirect($app['url_generator']->generate('manager_reporting'));
+		}
+		
 	}
 	
 	
@@ -130,7 +148,7 @@ class AdminController {
 		
 		if ($commentId != null)
 		{
-			$this->deleteCommentAction($request, $app, $commentId);
+			$this->deleteCommentAction($request, $app, $commentId, $id);
 			
 		}
 		else 
@@ -247,8 +265,15 @@ class AdminController {
 	}
 	public function deleteArticleAction(Application $app, $id)
 	{
-		$app['dao.article']->delete($id);
-		$app['session']->getFlashBag()->add('success', 'l\'article est bien supprimé');
+		$row = $app['dao.article']->delete($id);
+		if ($row == 0) {
+			$app['session']->getFlashBag()->add('error', 'Cet article n\'existe pas...');
+		}
+		else 
+		{
+			$app['session']->getFlashBag()->add('success', 'l\'article est bien supprimé');
+		}
+		
 		return $app->redirect($app['url_generator']->generate('manager_article'));
 	}
 	/**
@@ -378,6 +403,19 @@ class AdminController {
 				'title'=> 'Editer l\'utilisateur',
 				'userForm' => $userForm->createView(),
 		));
+	}
+	public function deleteUserAction(Application $app, $id)
+	{
+		$row = $app['dao.user']->delete($id);
+		if ($row == 0)
+		{
+			$app['session']->getFlashBag()->add('error', 'Pas d\'utilisateur trouvé');
+		}
+		else 
+		{
+			$app['session']->getFlashBag()->add('success', 'Utilisateur supprimé');
+		}
+		return $app->redirect($app['url_generator']->generate('manager_user'));
 	}
 	
 }

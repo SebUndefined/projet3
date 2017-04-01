@@ -55,7 +55,9 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
 				'ROLE_ADMIN' => array('ROLE_USER'),
 		),
 		'security.access_rules' => array(
-				array('^/manager', array('ROLE_USER', 'ROLE_ADMIN')),
+				array('^/manager/user', array('ROLE_ADMIN')),
+				array('^/manager', array('ROLE_USER', 'ROLE_ADMIN'),	
+				),
 		),
 ));
 //Load Form service provider and components
@@ -101,7 +103,7 @@ $app['dao.file'] = function () {
 // $app->error(function (\Exception $e, Request $request, $code) use ($app) {
 // 	switch ($code) {
 // 		case 403:
-// 			$message = 'Pour accéder à cette page, il faut vous authentifier...';
+// 			$message = 'Pour accéder à cette page, il faut que vous soyez administrateur';
 // 			break;
 // 		case 404:
 // 			$message = 'Vos avez demandé quelque chose qui ne se trouve pas ici...';

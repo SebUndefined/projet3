@@ -25,6 +25,12 @@ class ArticleDAO extends DAO
 		}
 		return $articles;
 	}
+	/**
+	 * 
+	 * @param integer $limit
+	 * @param string $hideDisabled Allow you to show or hide the disabled articles
+	 * @return \BlogWriter\Domain\Article[]
+	 */
 	public function findAll($limit = null, $hideDisabled = true)
 	{
 		$sql = "SELECT * FROM Articles";
@@ -60,7 +66,7 @@ class ArticleDAO extends DAO
 		if ($row)
 			return $this->buildDomainObject($row);
 			else
-				throw new \Exception("No article with slug " . $slug);
+				throw new \Exception("Pas d'article avec le slug " . $slug);
 	}
 	/**
 	 * Returns all articles matching the supplied slug.
@@ -111,7 +117,7 @@ class ArticleDAO extends DAO
 		if ($row)
 			return $this->buildDomainObject($row);
 			else
-				throw new \Exception("No article with slug " . $id);
+				throw new \Exception("Pas d\'article avec l\'id " . $id);
 	}
 	
 	public function changeToDefaultCategory($catId)
@@ -193,7 +199,8 @@ class ArticleDAO extends DAO
 	}
 	public function delete($id)
 	{
-		$this->getDb()->delete('Articles', array('art_id' => $id));
+		$row = $this->getDb()->delete('Articles', array('art_id' => $id));
+		return $row;
 	}
 	
 	public function setCategoryDAO(CategoryDAO $categoryDAO) {
