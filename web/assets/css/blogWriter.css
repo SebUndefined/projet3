@@ -6,16 +6,19 @@
     background-color: red;
 
 }
+/* Admin bar (not show if not log in */
 .front-admin-bar
 {
-	background-color:#53bbb3;
+	background-color:#53bbb3 !important;
 	color: #FFF;
 	text-align: right;
 }
+/* Color of the links */
 .front-admin-bar a
 {
 	color: #FFF;
 }
+/* Logo container, can contain text */
 #logo-container
 {
     text-align: center;
@@ -55,6 +58,10 @@
         color: #53bbb3;
         background-color: white;
     }
+.navbar-toggle .icon-bar {
+    background-color: #53bbb3 !important;
+}
+/* Color of the background text  */
 .carousel-caption.home-carousel
 {
     background-color: rgba(83, 187, 179, 0.7);
@@ -180,6 +187,7 @@ a
 footer
 {
     margin-top: 40px;
+    padding-top: 40px;
     background-color: #53bbb3;
     text-align: center;
 }
@@ -205,7 +213,6 @@ footer
     color: #081211;
     background-color: #42958f;
 }
-/*test*/
 
 .col-big{
     position: relative;
@@ -235,7 +242,6 @@ footer
   overflow: hidden;
   top: 0;
   left: 0;
-  /*background-color: rgba(75,75,75,0.7);*/
   -webkit-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
 }
@@ -250,7 +256,7 @@ footer
 }
 
 .hovereffect h2 {
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   color: #fff;
   text-align: center;
   position: relative;
@@ -263,7 +269,7 @@ footer
   -webkit-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
 }
-
+/* Make the article title more hight */
 .hovereffect:hover h2 {
   -webkit-transform: translateY(5px);
   -ms-transform: translateY(5px);
@@ -275,7 +281,7 @@ footer
   display: inline-block;
   text-decoration: none;
   padding: 7px 14px;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   color: #fff;
   border: 1px solid #fff;
   background-color: transparent;
@@ -325,11 +331,6 @@ hr
 @media (min-width: 768px) {
   .container {
     max-width: 1150px;
-  }
-  #top-nav
-  {
-    /*padding-left: 0px;
-    padding-right: 0px;*/
   }
   #navbar {
       text-transform: uppercase;

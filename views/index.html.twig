@@ -33,7 +33,6 @@
            <i class="fa fa-caret-down fa-caret-down-green fa-5x"></i>
         </div>
     {% for article in articles %}
-    	{% if article.published == 1 %}
     	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
     				<a href="{{ path ('article', { 'slug': article.slug })}}">
                     <div class="hovereffect" style="background-image: url({{ article.img }})">
@@ -45,7 +44,6 @@
                     </div>
                     </a>
     	</div>
-        {% endif %}
     {% endfor %}
     </div>
     <div class="col-lg-4 col-md-4 col-sm-12">
@@ -64,7 +62,7 @@
     			</div>
 	</div> 
 	</div>
-    {{ dump (articles) }}
+
 
 
 {% endblock %}

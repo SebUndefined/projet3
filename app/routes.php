@@ -59,7 +59,7 @@ $app->get('/manager/comment/{commentId}/delete/', "BlogWriter\Controller\AdminCo
 //Manager Reportings
 $app->get('/manager/reporting/', "BlogWriter\Controller\AdminController::adminReportingAction")
 ->bind('manager_reporting');
-$app->get('/manager/reporting/{id}/delete/', "BlogWriter\Controller\AdminController::deleteReportingAction")
+$app->get('/manager/reporting/{id}/{commentId}/delete/', "BlogWriter\Controller\AdminController::deleteReportingAction")
 ->bind('manager_reporting_delete');
 
 //Manager Articles

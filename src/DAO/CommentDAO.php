@@ -12,13 +12,17 @@ class CommentDAO extends DAO
 	private $articleDAO;
 	
 	/**
-	 * Return a list of all comments, sorted by date (most recent last).
-	 *
-	 * @return array A list of all comments.
+	 * Return a list of comment
+	 * @param integer $limit by default at null
+	 * @return \BlogWriter\Domain\Comment[]
 	 */
-	public function findAll()
+	public function findAll($limit = null)
 	{
-		$sql = "select * from Comments ORDER BY com_id DESC LIMIT 20";
+		$sql = "select * from Comments ORDER BY com_date DESC";
+		if ($limit != null)
+		{
+			$sql = $sql . " LIMIT " . $limit;
+		}
 		$result = $this->getDb()->fetchAll($sql);
 		$comments = array();
 		foreach ($result as $row) {

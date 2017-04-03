@@ -12,6 +12,12 @@ use BlogWriter\Form\Type\UserType;
 
 class AdminController {
 
+	/**
+	 * Login function
+	 * @param Request $request
+	 * @param Application $app
+	 * @return unknown
+	 */
 	public function loginIndex (Request $request, Application $app)
 	{
 		return $app['twig']->render('login.html.twig', array(
@@ -19,14 +25,19 @@ class AdminController {
 			'last_username' =>$app['session']->get('_security.last_username'),
 		));
 	}
-	
+	/**
+	 * Admin index page
+	 * @param Application $app
+	 * @return unknown
+	 */
 	public function adminIndex(Application $app){
 		
 		$nbArticles = $app['dao.article']->countArticles();
 		$nbCategories = $app['dao.category']->countCategories();
 		$nbComments = $app['dao.comment']->countComments();
 		$nbReportings = $app['dao.reporting']->countReportings();
-		$comments = $app['dao.comment']->findAll();
+		//We take only the last 6 comments
+		$comments = $app['dao.comment']->findAll(10);
 		$reportings = $app['dao.reporting']->findAll();
 		return $app['twig']->render('admin.index.html.twig', array(
 				"nbArticles" => $nbArticles,
@@ -48,6 +59,12 @@ class AdminController {
 				'categories' => $categories,
 		));
 	}
+	/**
+	 * Add a category
+	 * @param Request $request
+	 * @param Application $app
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|unknown
+	 */
 	public function addCategoryAction(Request $request, Application $app)
 	{
 		$category = new Category();
@@ -57,13 +74,20 @@ class AdminController {
 		{
 			$id = $app['dao.category']->save($category);
 			$app['session']->getFlashBag()->add('success', 'La catégorie a bien été ajouté !');
-			return $app->redirect($id . '/edit');
+			return $app->redirect($app['url_generator']->generate('manager_category_edit', array('id' => $id)));
 		}
 		return $app['twig']->render('admin.category_form.html.twig', array(
 				'title' => 'Nouvelle catégorie',
 				'categoryForm' => $categoryForm->createView(),
 		));
 	}
+	/**
+	 * Edit the category
+	 * @param Request $request
+	 * @param Application $app
+	 * @param unknown $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|unknown
+	 */
 	public function editCategoryAction(Request $request, Application $app, $id)
 	{
 		//The user is not allowed to modify the default category
@@ -85,6 +109,12 @@ class AdminController {
 				'categoryForm' => $categoryForm->createView(),
 		));
 	}
+	/**
+	 * Delete the category
+	 * @param Application $app
+	 * @param unknown $id
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
 	public function deleteCategoryAction(Application $app, $id)
 	{
 		//The user is not allowed to delete the default category
@@ -117,18 +147,10 @@ class AdminController {
 	
 	
 	
-	public function deleteCommentAction(Request $request, Application $app, $commentId, $reportId = null) {
+	public function deleteCommentAction(Application $app, $commentId) {
 		$app['dao.comment']->delete($commentId);
 		$app['session']->getFlashBag()->add('success', 'Le commentaire a bien été supprimé');
-		if ($reportId == null)
-		{
-			return $app->redirect($app['url_generator']->generate('manager_comment'));
-		}
-		else 
-		{
-			return $app->redirect($app['url_generator']->generate('manager_reporting'));
-		}
-		
+		return $app->redirect($app['url_generator']->generate('manager_comment'));
 	}
 	
 	
@@ -136,6 +158,11 @@ class AdminController {
 	//##########################################################################
 	//##################### Reportings management ##############################
 	//##########################################################################
+	/**
+	 * Show the reportings on the reporting page
+	 * @param Application $app
+	 * @return unknown
+	 */
 	public function adminReportingAction(Application $app)
 	{
 		$reportings = $app['dao.reporting']->findAll();
@@ -144,12 +171,18 @@ class AdminController {
 				'reportings' => $reportings,
 		));
 	}
-	public function deleteReportingAction(Request $request, Application $app, $id, $commentId = null) {
-		
-		if ($commentId != null)
+	/**
+	 * 
+	 * @param Application $app
+	 * @param integer $id
+	 * @param integer $commentId
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function deleteReportingAction(Application $app, $id, $commentId = "null") {
+		if ($commentId != "null")
 		{
-			$this->deleteCommentAction($request, $app, $commentId, $id);
-			
+			$app['dao.comment']->delete($commentId);
+			$app['session']->getFlashBag()->add('success', 'Le commentaire a bien été supprimé');
 		}
 		else 
 		{
@@ -349,7 +382,7 @@ class AdminController {
 					$user->setPassword($encodedPassword);
 					$id = $app['dao.user']->save($user);
 					$app['session']->getFlashBag()->add('success', 'L\'utilisateur à bien été ajouté');
-					return $app->redirect($id . '/edit');
+					return $app->redirect($app['url_generator']->generate('manager_user_edit', array('id' => $id)));
 				}
 				else {
 					$app['session']->getFlashBag()->add('error', 'Email déjà utilisé...');

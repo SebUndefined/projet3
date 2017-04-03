@@ -25,7 +25,7 @@ class HomeController
 		return $app['twig']->render('index.html.twig', array('articles' => $articles, 'categories' => $categories));
 	}
 	/**
-	 * 
+	 * Show the article per pages
 	 * @param number $page
 	 * @param Application $app
 	 * @return unknown
@@ -62,6 +62,11 @@ class HomeController
 		
 		
 	}
+	/**
+	 * Show all the category with the number of article
+	 * @param Application $app
+	 * @return unknown
+	 */
 	public function categoriesIndexAction(Application $app)
 	{
 		$categories = $app['dao.category']->findCategories();
@@ -71,7 +76,12 @@ class HomeController
 				'articles' =>$articles,
 		));
 	}
-	
+	/**
+	 * Show the article depending of a specific category
+	 * @param string $slug
+	 * @param Application $app
+	 * @return unknown
+	 */
 	public function categoryAction($slug, Application $app)
 	{
 		$category = $app['dao.category']->findBySlug($slug);
@@ -115,9 +125,16 @@ class HomeController
 				'reportingForm' =>$reportinFormView,
 				));
 	}
+	/**
+	 * Add a comment 
+	 * @param integer $idParent
+	 * @param integer $idArticle
+	 * @param Request $request
+	 * @param Application $app
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
 	public function addCommentAction($idParent, $idArticle, Request $request, Application $app)
 	{
-		//Check long comment
 		$comment = new Comment();
 		$article = $app['dao.article']->findById($idArticle);
 		$comment->setArticle($article);
@@ -133,9 +150,19 @@ class HomeController
 			$comment->setContent($request->get('RootComment'));
 			$comment->setLevel(1);
 		}
-		$app['dao.comment']->save($comment);
-		$app['session']->getFlashBag()->add('successReport', 'Votre commentaire est posté, merci de votre participation ! ');
+		//Check if comment is not too long
+		if (strlen($comment->getContent()) > 500)
+		{
+			$app['session']->getFlashBag()->add('error', 'Votre commentaire est trop long...');
+		}
+		else
+		{
+			$app['dao.comment']->save($comment);
+			$app['session']->getFlashBag()->add('successReport', 'Votre commentaire est posté, merci de votre participation ! ');
+			
+		}
 		return $app->redirect($app['url_generator']->generate('article', array('slug' => $article->getSlug())));
+		
 	}
 	/**
 	 * Contact page controller.
