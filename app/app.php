@@ -24,11 +24,14 @@ $app->register(new Silex\Provider\DoctrineServiceProvider());
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
 		'twig.path' => __DIR__.'/../views',
 ));
+
+
 $app->register(new Silex\Provider\ValidatorServiceProvider());
 //Loading Assets for Twig
 $app->register(new Silex\Provider\AssetServiceProvider(), array(
 		'assets.version' => 'v1'
 ));
+
 $app->register(new Silex\Provider\SessionServiceProvider());
 $app->register(new Silex\Provider\SecurityServiceProvider(), array(
 		'security.firewalls'=> array(
@@ -64,6 +67,7 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
 $app->register(new Silex\Provider\FormServiceProvider());
 $app->register(new Silex\Provider\LocaleServiceProvider());
 $app->register(new Silex\Provider\TranslationServiceProvider());
+
 //##########################################################################
 //##################### Loading APP Services ###############################
 //##########################################################################

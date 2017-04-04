@@ -39,7 +39,7 @@
                    
                     <div class="overlay">
                         <h2>{{ article.title }}</h2>
-                        <p class="info">{{ article.content|striptags|slice(0,100) }}...</p>
+                        <p class="info">{{ article.content|striptags|slice(0,100)|raw  }}</p>
                     </div>
                     </div>
                     </a>
