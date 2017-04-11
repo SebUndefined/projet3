@@ -145,6 +145,7 @@ class ArticleDAO extends DAO
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		$articles = array();
+		
 		foreach ($result as $row) {
 			$articleId = $row['art_id'];
 			$articles[$articleId] = $this->buildDomainObject($row);
@@ -210,9 +211,18 @@ class ArticleDAO extends DAO
 		$this->userDAO = $userDAO;
 	}
 	
-	public function countArticles()
+	/**
+	 * Counting the articles in the database
+	 * @param string $hideDisable if you want to hide the disabled article (need true for the pagination in the front-end)
+	 * @return integer the number of articles
+	 */
+	public function countArticles($hideDisable = false)
 	{
 		$sql = 'SELECT COUNT(*) AS total FROM Articles';
+		if ($hideDisable == true)
+		{
+			$sql = $sql . " WHERE art_published = 1";
+		}
 		$articleCounter = $this->getDb()->query($sql);
 		$nbArticles = $articleCounter->fetch();
 		return $nbArticles['total'];
