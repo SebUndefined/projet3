@@ -17,6 +17,9 @@ class UserType extends AbstractType
 	{
 		$builder->add('username', TextType::class, array(
 				'label' => 'Nom d\'utilisateur',
+				'attr' => array(
+						'maxlength' => '255',
+						'pattern'=>'[a-zA-Z0-9]{0,100}')
 		));
 		$builder->add('email', EmailType::class);
 		$builder->add('firstName', TextType::class, array(
@@ -31,6 +34,9 @@ class UserType extends AbstractType
 				'options'         => array('required' => true),
 				'first_options'   => array('label' => 'Mot de passe'),
 				'second_options'  => array('label' => 'Mot de passe (vérification)'),
+				'attr' => array(
+						'pattern'=>'[a-zA-Z0-9!@#$%^*_|]{6,100}')
+				
 		));
 		$builder->add('role', ChoiceType::class, array(
 				'choices' => array('Admin' => 'ROLE_ADMIN', 'User' => 'ROLE_USER')

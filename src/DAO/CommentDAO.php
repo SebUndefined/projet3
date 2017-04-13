@@ -38,9 +38,7 @@ class CommentDAO extends DAO
 	
 	/**
 	 * Return a list of all comments for an article, sorted by date (most recent last).
-	 *
 	 * @param integer $articleId The article id.
-	 *
 	 * @return array A list of all comments for the article.
 	 */
 	public function findAllByArticle($articleId) {
@@ -52,12 +50,10 @@ class CommentDAO extends DAO
 		$sql = "select * from Comments where com_id_art=? ORDER BY com_id DESC";
 		$result = $this->getDb()->fetchAll($sql, array($articleId));
 	
-		// Convert query result to an array of domain objects
 		$comments = array();
 		foreach ($result as $row) {
 			$comId = $row['com_id'];
 			$comment = $this->buildDomainObject($row);
-			// The associated article is defined for the constructed comment
 			$comment->setArticle($article);
 			$comments[$comId] = $comment;
 		}
@@ -78,7 +74,6 @@ class CommentDAO extends DAO
 	}
 	/**
 	 * Saves a comment into the database.
-	 *
 	 * @param \BlogWriter\Domain\Comment $comment The comment to save
 	 */
 	public function save(Comment $comment) {

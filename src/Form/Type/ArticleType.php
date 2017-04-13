@@ -21,7 +21,8 @@ class ArticleType extends AbstractType
 	{
 		$builder->add('title', TextType::class, array(
 				'label' => 'Titre de l\'article',
-				'attr' => array('class' =>'form-control col-lg-3')
+				'attr' => array(
+						'maxlength' => '255')
 		));
 		$builder->add('content', TextareaType::class, array(
 				'required' => false,
@@ -50,6 +51,7 @@ class ArticleType extends AbstractType
 		));
 		$builder->add('img', FileType::class, array(
 				'data_class' => null,
+				'label'    => 'Image',
 				'required' => false,
 		));
 		$builder->add('published', CheckboxType::class, array(

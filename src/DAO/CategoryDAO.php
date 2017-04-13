@@ -8,7 +8,8 @@ use Symfony\Component\Validator\Constraints\Length;
 class CategoryDAO extends DAO
 {
 	/**
-	 * Choose 6 categories randomly in the database
+	 * Get all the category in the database
+	 * @param integer $limit the number of Category desired (last one)
 	 * @return \BlogWriter\Domain\Category[]
 	 */
 	public function findAll($limit = null)
@@ -117,6 +118,10 @@ class CategoryDAO extends DAO
 		}
 		return $category->getId();
 	}
+	/**
+	 * Delete a category from the database
+	 * @param integer $id
+	 */
 	public function delete($id)
 	{
 		$this->getDb()->delete('Categories', array('cat_id' => $id));

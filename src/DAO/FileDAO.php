@@ -17,6 +17,7 @@ class FileDAO
  		$sizeMax = $this->convertMaxUploadSrv($strSizeMax);
 		if ($sizeMax > 0)
 		{
+			//If the file is too big for the server
 			if ($file->getSize() >= $sizeMax || $file->getSize() == 0)
 			{
 				$message = array();
@@ -24,6 +25,7 @@ class FileDAO
 				$message[1] = 'Votre serveur ne peut supporter des fichiers supérieur à ' . $strSizeMax;
 				return $message;
 			}
+			//If the file is bigger that 3MB
 			elseif ($file->getSize() >= 3145728)
 			{
 				$message = array();

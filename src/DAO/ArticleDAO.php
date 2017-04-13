@@ -11,20 +11,7 @@ class ArticleDAO extends DAO
 	private $userDAO;
 	
 	
-	
-	public function findLast()
-	{
-		$sql = "SELECT * FROM Articles ORDER BY art_create_date DESC LIMIT 6";
-		$result = $this->getDb()->fetchAll($sql);
-		
-		// Convert query result to an array of domain objects
-		$articles = array();
-		foreach ($result as $row) {
-			$articleId = $row['art_id'];
-			$articles[$articleId] = $this->buildDomainObject($row);
-		}
-		return $articles;
-	}
+
 	/**
 	 * 
 	 * @param integer $limit
@@ -54,9 +41,7 @@ class ArticleDAO extends DAO
 	}
 	/**
 	 * Returns an article matching the supplied slug.
-	 *
 	 * @param integer $id
-	 *
 	 * @return \BlogWriter\Domain\Article|throws an exception if no matching article is found
 	 */
 	public function findBySlug($slug) {
@@ -69,11 +54,9 @@ class ArticleDAO extends DAO
 				throw new \Exception("Pas d'article avec le slug " . $slug);
 	}
 	/**
-	 * Returns all articles matching the supplied slug.
-	 *
+	 * Returns all articles matching the supplied category slug.
 	 * @param string $slug
-	 *
-	 * @return \BlogWriter\Domain\Article|throws an exception if no matching article is found
+	 * @return \BlogWriter\Domain\Article
 	 */
 	public function findByCategory($slug) {
 		$sql = "SELECT `Articles`.*, `Categories`.cat_id FROM `Articles` 
@@ -120,6 +103,10 @@ class ArticleDAO extends DAO
 				throw new \Exception("Pas d\'article avec l\'id " . $id);
 	}
 	
+	/**
+	 * Change the article categorie to the default one, useful for delete funtion
+	 * @param integer $catId
+	 */
 	public function changeToDefaultCategory($catId)
 	{
 		$articles = $this->findByCategoryId($catId);
@@ -153,6 +140,11 @@ class ArticleDAO extends DAO
 		return $articles;
 		
 	}
+	/**
+	 * Save an article in the database
+	 * @param Article $article
+	 * @return integer the id of the article
+	 */
 	public function save($article) 
 	{
 		$futureSlug = $this->cleanString($article->getTitle());
@@ -198,6 +190,11 @@ class ArticleDAO extends DAO
 		}
 		return $article->getId();
 	}
+	/**
+	 * Delete an article
+	 * @param integer $id  the id of the article
+	 * @return number the number of row affected
+	 */
 	public function delete($id)
 	{
 		$row = $this->getDb()->delete('Articles', array('art_id' => $id));

@@ -8,6 +8,11 @@ class ReportingDAO extends DAO
 {
 	private $commentDAO;
 	
+	/**
+	 * 
+	 * @param integer $limit (optionnal)
+	 * @return \BlogWriter\Domain\Reporting[]
+	 */
 	public function findAll($limit = null)
 	{
 		$sql = "SELECT * FROM Reportings ORDER BY report_date DESC";
@@ -26,8 +31,7 @@ class ReportingDAO extends DAO
 	}
 	/**
 	 * Saves a Report into the database.
-	 *
-	 * @param \BlogWriter\Domain\Reporting $report The comment to save
+	 * @param Reporting $report The report to save
 	 */
 	public function save(Reporting $report) {
 		//die(var_dump($report));
@@ -49,6 +53,10 @@ class ReportingDAO extends DAO
 			$report->setId($id);
 		}
 	}
+	/**
+	 * Delete a report
+	 * @param $id
+	 */
 	public function delete($id)
 	{
 		
