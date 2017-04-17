@@ -61,7 +61,8 @@ class ArticleDAO extends DAO
 	public function findByCategory($slug) {
 		$sql = "SELECT `Articles`.*, `Categories`.cat_id FROM `Articles` 
 				LEFT JOIN `Categories` ON `Articles`.`art_category_id` = `Categories`.`cat_id` 
-				WHERE Categories.cat_slug = ? and Articles.art_published = 1";
+				WHERE Categories.cat_slug = ? and Articles.art_published = 1
+				ORDER BY art_create_date DESC";
 		$result = $this->getDb()->fetchAll($sql, array($slug));
 		$articles = array();
 		foreach ($result as $row) {
