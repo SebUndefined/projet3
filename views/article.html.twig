@@ -48,6 +48,16 @@
             {% endfor %}
 			<form name="CommentRoot" action="{{ path('comment_add', {'idParent' : 'null', 'idArticle': article.id}) }}" method="post">
           					<div class="form-group">
+          						<input type="text" 
+          							class="form-control"
+          							name="RootCommentPseudo" 
+          							rows="4"
+          							placeholder="Pseudo (sans espace et pas de caractères spéciaux)"
+          							pattern="[a-zA-Z0-9]{4,20}"
+          							maxlength="20"
+          							required="required"/>
+          					</div>
+          					<div class="form-group">
           						<textarea type="text" 
           							class="form-control"
           							name="RootComment" 
@@ -62,7 +72,7 @@
             {% for comment in comments %}
                 <div class="panel panel-default">
                 	<div class="panel-heading">
-                	<small>{{ comment.date|date("d/m/Y") }} à {{ comment.date|date("H:i") }}</small>
+                	<small>{{ comment.pseudo }} le {{ comment.date|date("d/m/Y") }} à {{ comment.date|date("H:i") }}</small>
                 	</div>
       				<div class="panel-body">
         				<p>{{ comment.content }}</p>
@@ -75,6 +85,16 @@
         				<div  class="collapse" id="{{ comment.id }}">
           				<div class="well">
           				<form name="subComment{{ comment.id }}" action="{{ path('comment_add', {'idParent' : comment.id, 'idArticle': article.id}) }}" method="post">
+          					<div class="form-group">
+          						<input type="text" 
+          							class="form-control"
+          							name="answerCommentPseudo{{ comment.id }}" 
+          							rows="4"
+          							pattern="[a-zA-Z0-9]{4,20}"
+          							maxlength="20"
+          							placeholder="Pseudo (sans espace et pas de caractères spéciaux)"
+          							required="required">
+          					</div>
           					<div class="form-group">
           						<textarea type="text" 
           							class="form-control"
@@ -95,7 +115,7 @@
         		    {% for commentLevel2 in comment.children %}
         		    	<div class="panel panel-default comments-level2">
         		    		<div class="panel-heading">
-                				<small>{{ commentLevel2.date|date("d/m/Y") }} à {{ commentLevel2.date|date("H:i") }}</small>
+                				<small>{{commentLevel2.pseudo}} le {{ commentLevel2.date|date("d/m/Y") }} à {{ commentLevel2.date|date("H:i") }}</small>
                 			</div>
               				<div class="panel-body">
                 				<p>{{ commentLevel2.content }}</p>
@@ -108,6 +128,16 @@
 									<div class="collapse" id="{{ commentLevel2.id }}">
       									<div class="well">
                             				<form name="subComment{{ commentLevel2.id }}" action="{{ path('comment_add', {'idParent' : commentLevel2.id, 'idArticle': article.id}) }}" method="post">
+                              					<div class="form-group">
+              										<input type="text" 
+                              							class="form-control"
+                              							name="answerCommentPseudo{{ commentLevel2.id }}"  
+                              							rows="4"
+                              							maxlength="20"
+                              							pattern="[a-zA-Z0-9]{4,20}"
+                              							placeholder="Pseudo (sans espace et pas de caractères spéciaux)"
+                              							required="required"/>
+          										</div>
                               					<div class="form-group">
                               						<textarea type="text" 
                               							class="form-control"
@@ -130,7 +160,7 @@
         		            {% for commentLevel3 in commentLevel2.children %}
                 		    	<div class="panel panel-default comments-level3">
                 		    		<div class="panel-heading">
-                						<small>{{ commentLevel3.date|date("d/m/Y") }} à {{ commentLevel3.date|date("H:i") }}</small>
+                						<small>{{ commentLevel3.pseudo }} le {{ commentLevel3.date|date("d/m/Y") }} à {{ commentLevel3.date|date("H:i") }}</small>
                 					</div>
                       				<div class="panel-body">
                         				<p>{{ commentLevel3.content }}</p>

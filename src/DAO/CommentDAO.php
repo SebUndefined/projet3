@@ -57,7 +57,6 @@ class CommentDAO extends DAO
 			$comment->setArticle($article);
 			$comments[$comId] = $comment;
 		}
-// 		return $comments;
 		$commentsSorted = CommentDAO::buildCommentsTree($comments);
 		return $commentsSorted;
 	}
@@ -88,12 +87,12 @@ class CommentDAO extends DAO
 		}
 		$commentData = array(
 				'com_date' => date('Y-m-d H:i:s'),
+				'com_pseudo' => $comment->getPseudo(),
 				'com_content' => $comment->getContent(),
 				'com_id_parent' => $parentCommentId,
 				'com_level' => $level,
 				'com_id_art' => $comment->getArticle()->getId(),
 		);
-		
 		if ($comment->getId()) {
 			// The comment has already been saved : update it
 			$this->getDb()->update('Comments', $commentData, array('com_id' => $comment->getId()));
@@ -138,6 +137,7 @@ class CommentDAO extends DAO
 		$comment = new Comment();
 		$comment->setId($row['com_id']);
 		$comment->setDate($row['com_date']);
+		$comment->setPseudo($row['com_pseudo']);
 		$comment->setContent($row['com_content']);
 		//check
 		if (empty($row['com_id_parent']) != true)

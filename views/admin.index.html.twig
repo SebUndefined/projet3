@@ -163,6 +163,7 @@
         					<tr>
         						<th>Date</th>
         						<th>Article</th>
+        						<th>Pseudo</th>
         						<th>Commentaire</th>
         					</tr>
         					{% for comment in comments %}
@@ -172,6 +173,9 @@
         						</td>
         						<td>
         							{{ comment.article.title }}
+        						</td>
+        						<td>
+        							{{ comment.pseudo }}
         						</td>
         						<td>
         							{{ comment.content }}

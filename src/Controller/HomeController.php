@@ -143,10 +143,12 @@ class HomeController
 			$commentParent = $app['dao.comment']->findById($idParent);
 			$comment->setLevel($commentParent->getLevel()+1);
 			$comment->setParent($commentParent);
+			$comment->setPseudo($request->get('answerCommentPseudo'. $idParent));
 			$comment->setContent($request->get('answerComment'. $idParent));
 		}
 		else 
 		{
+			$comment->setPseudo($request->get('RootCommentPseudo'));
 			$comment->setContent($request->get('RootComment'));
 			$comment->setLevel(1);
 		}

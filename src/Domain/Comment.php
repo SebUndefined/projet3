@@ -6,6 +6,7 @@ class Comment
 {
 	private $id;
 	private $date;
+	private $pseudo;
 	private $content;
 	private $parent;
 	private $level;
@@ -44,7 +45,22 @@ class Comment
 		$this->date = $date;
 		return $this;
 	}
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getPseudo() {
+		return $this->pseudo;
+	}
 	
+	/**
+	 *
+	 * @param unknown_type $pseudo
+	 */
+	public function setPseudo($pseudo) {
+		$this->pseudo = $pseudo;
+		return $this;
+	}
 	/**
 	 *
 	 * @return the unknown_type
@@ -112,4 +128,7 @@ class Comment
 		$this->article = $article;
 		return $this;
 	}
+	
+	
+	
 }
